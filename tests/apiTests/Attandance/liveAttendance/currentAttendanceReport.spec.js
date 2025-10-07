@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../../../utils/endpoints/classes/login.js";
-import { liveAttendance } from "../../../utils/endpoints/classes/attandance/liveAttendance.js";
+import { liveAttendance } from "../../../utils/endpoints/classes/Attandance/liveAttendance.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 import inputs from "../../../fixtures/inputs.json" assert { type: "json" };
 let response;
