@@ -1,0 +1,32 @@
+{
+  "name": "fabhr",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "open": "npx playwright test --ui",
+    "test:all": "npx playwright test",
+    "test:ui": "npx playwright test tests/ui",
+    "test:api": "npx playwright test tests/api",
+    "test:happy": "npx playwright test --grep '@happy'",
+    "test:negative": "npx playwright test --grep '@negative'",
+    "report:allure": "allure generate allure-results -o allure-report --clean && allure open allure-report",
+    "report:html": "npx playwright show-report",
+    "upload-report": "node utils/uploadReport.js",
+    "slack-notify": "node utils/slackNotification.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "description": "Automation tests with Playwright",
+  "devDependencies": {
+    "@playwright/test": "^1.55.1",
+    "@types/node": "^22.15.1",
+    "allure-commandline": "^2.34.1",
+    "allure-js-commons": "^3.3.3",
+    "allure-playwright": "^3.4.1"
+  },
+  "dependencies": {
+    "playwright": "^1.55.1"
+  }
+}

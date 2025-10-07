@@ -1,0 +1,194 @@
+{
+  "sortingTestCases": [
+    {
+      "name": "Sort by requestOn ASC",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "requestOn",
+        "sortDirection": "ASC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by reason DESC",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "reason",
+        "sortDirection": "DESC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by date ASC",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "date",
+        "sortDirection": "ASC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by days DESC",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "days",
+        "sortDirection": "DESC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by name ASC with employeeId",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "employeeId": 71,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "name",
+        "sortDirection": "ASC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by department DESC with employeeId",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "employeeId": 71,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "department",
+        "sortDirection": "DESC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by attendanceDays ASC with employeeId",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "employeeId": 71,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "",
+        "sortBy": "attendanceDays",
+        "sortDirection": "ASC",
+        "sourceDetails": {}
+      }
+    },
+    {
+      "name": "Sort by attendanceDays DESC with search",
+      "payload": {
+        "activeStatus": "",
+        "cityIds": [],
+        "companyId": 1,
+        "currentPage": 0,
+        "employeeId": 71,
+        "experience": "",
+        "itemPerPage": 5,
+        "payrollFlag": "PR",
+        "processMonth": "",
+        "rating": 11,
+        "searchTitle": "test",
+        "sortBy": "attendanceDays",
+        "sortDirection": "DESC",
+        "sourceDetails": {}
+      }
+    }
+  ],
+  "success": {
+    "statusCode": 200,
+    "message": "Data Found Successfully",
+    "isSuccess": true
+  },
+  "expectedDataStructure": {
+    "data": "array",
+    "currentPage": "number",
+    "totalItems": "number",
+    "totalPages": "number"
+  },
+  "expectedARDataStructure": {
+    "arID": "number",
+    "approvalId": "number",
+    "arCategory": "string",
+    "arCategoryValue": "string",
+    "days": "number",
+    "companyId": "number",
+    "employeeId": "number",
+    "employeeRemark": "string",
+    "fromDate": "number",
+    "status": "string",
+    "statusValue": "string",
+    "toDate": "number",
+    "dateCreated": "number",
+    "actionableDate": "number"
+  },
+  "baseRequestBody": {
+    "activeStatus": "",
+    "cityIds": [],
+    "companyId": 1,
+    "currentPage": 0,
+    "experience": "",
+    "itemPerPage": 500,
+    "payrollFlag": "PR",
+    "processMonth": "",
+    "rating": 11,
+    "searchTitle": "",
+    "sortBy": "",
+    "sortDirection": "DESC",
+    "sourceDetails": {}
+  }
+}

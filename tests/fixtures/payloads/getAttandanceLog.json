@@ -1,0 +1,19 @@
+{
+    "getAttandanceLogPayload":{
+        
+    "currentPage": 0,
+    "itemPerPage": 5,
+    "searchTitle": "",
+    "sortBy": "",
+    "sortDirection": "DESC",
+    "companyId": 1,
+    "processMonth": "",
+    "activeStatus": "",
+    "cityIds": [],
+    "experience": "",
+    "sourceDetails": {},
+    "rating": 11,
+    "payrollFlag": "PR",
+    "date": "2025-09-21T11:03:07.009Z"
+    }
+}

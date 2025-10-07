@@ -1,0 +1,22 @@
+{
+    "getAllLateComersListByDate":{
+    "cityIds": [],
+    "companyId": 1,
+    "employeeName": "",
+    "experience": "",
+    "offset": 0,
+    "limit": 20000,
+    "sortDirection": "desc"
+ 
+    },
+     "getAllLateComersListByDateCount":{
+    "cityIds": [],
+    "companyId": 1,
+    "employeeName": "",
+    "experience": "",
+    "offset": 0,
+    "limit": 20000,
+    "sortDirection": "desc",
+    "attendanceDate":"2025-09-30T07:15:39.240Z"
+    }
+}

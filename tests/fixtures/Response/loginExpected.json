@@ -1,0 +1,35 @@
+{
+  "happy": {
+    "status": 200,
+    "message": "success",
+    "employeeCode": "HR-102",
+    "roles": ["Admin"],
+    "userId": 2,
+    "employeeId": 1,
+    "loginName": "HR-102-testing.in",
+    "loginfortestserver":"HR-102-testing.in",
+    "testpassword": 12345678,
+    "password":"12345678",
+    "emailOfUser": "deepak.p@fabhr.in"
+  },
+  "negative": [
+    {
+      "username": "T-10",
+      "password": "123",
+      "status": 500,
+      "expected": "Server Not Responding"
+    },
+    {
+      "username": "T-10",
+      "password": "12345678",
+      "status": 500,
+      "expected": "Server Not Responding"
+    },
+    {
+      "username": "HR-102-testing.in",
+      "password": "0",
+      "status": 200,
+      "expectedRegex": "Incorrect password !!"
+    }
+  ]
+} 

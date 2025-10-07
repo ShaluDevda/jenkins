@@ -1,0 +1,18 @@
+{
+    "pagination1": {
+    "currentPage": 0,
+    "itemPerPage": 5,
+    "searchTitle": "",
+    "sortBy": "",
+    "sortDirection": "DESC",
+    "companyId": 1,
+    "processMonth": "",
+    "activeStatus": "",
+    "cityIds": [],
+    "experience": "",
+    "sourceDetails": {},
+    "rating": 11,
+    "payrollFlag": "PR"
+  }
+  
+}

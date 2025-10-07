@@ -1,0 +1,27 @@
+{
+  "success": {
+    "statusCode": 200,
+    "message": "Data Found Successfully",
+    "isSuccess": true
+  },
+  "failure": {
+    "statusCode": 500,
+    "message": "You have already applied AR in the given duration.",
+    "alreadyApplyLeave":"You cannot apply AR request because you have already applied Full Day Leave in this duration",
+    "isSuccess": false
+  },
+  "requestBody": {
+    "arID": 0,
+    "arCategory": "CN",
+    "fromDate": "2025-09-14T18:30:00.000Z",
+    "toDate": "2025-09-14T18:30:00.000Z",
+    "days": 1,
+    "employeeRemark": "test",
+    "userId": 2,
+    "employeeId": 1,
+    "companyId": 1,
+    "userIdUpdate": 2,
+    "status": "PEN",
+    "approvalId": 368
+  }
+}

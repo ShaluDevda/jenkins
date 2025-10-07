@@ -1,0 +1,13 @@
+{
+    "createleaveScheme": {
+        "leaveSchemeName": "TestingByAutomation",
+        "value": 1,
+        "userId": 1,
+        "leaveSchemeId": 2,
+        "dateCreated": null,
+        "userIdUpdate": 2,
+        "status": "AC",
+        "leavePeriodId": 1,
+        "companyId": 1
+    }
+}
