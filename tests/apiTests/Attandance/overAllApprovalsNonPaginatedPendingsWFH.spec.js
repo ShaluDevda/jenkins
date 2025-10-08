@@ -26,7 +26,7 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
   
   });
 
-  test("POST| get overAll Approvals Paginated Non Pendings WFH  @happy medium - Success scenario", async ({ request }) => {
+  test("POST| get overAll Approvals Paginated Non Pendings WFH  @happy - Success scenario", async ({ request }) => {
     const response = await pagination.overAllApprovalsNonPaginatedPendingsWFH(
       request, 
       paginationPayload.pagination1, 
@@ -46,7 +46,7 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
     expect(typeof responseBody.totalPages).toBe("number");
   });
 
-  test("POST| get overAll Approvals Non Paginated Pendings WFH @happymedium - Verify WFH entry appears after successful application", async ({ request }) => {
+  test("POST| get overAll Approvals Non Paginated Pendings WFH @happy - Verify WFH entry appears after successful application", async ({ request }) => {
     const initialResponse = await pagination.overAllApprovalsNonPaginatedPendingsWFH(
       request, 
       paginationPayload.pagination1, 
@@ -97,7 +97,7 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
    
   });
 
-   test("POST| get overAll Approvals Non Paginated Pendings WFH @happy    - Different page sizes", async ({ request }) => {
+   test("POST| get overAll Approvals Non Paginated Pendings WFH @happy  - Different page sizes", async ({ request }) => {
    
     const testCases = [
       { itemPerPage: 5, expectedMaxItems: 5 },

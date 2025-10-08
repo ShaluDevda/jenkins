@@ -2,6 +2,7 @@ import endpoints from "../../../../fixtures/Endpoints/commonEndpoint.json" asser
 import attandanceEndpoints from "../../../../fixtures/Endpoints/Attandance.json" assert { type: "json" };
 
 import inputsData from "../../../../fixtures/inputs.json" assert { type: "json" };
+import { url } from "inspector";
 let responseBody;
 class Attandance {
   static getCurrentDateTime() {
@@ -516,9 +517,10 @@ class Attandance {
       body: responseBody,
     };
   }
-  async getEmployeeList(apiContext, token) {
+  async getEmployeeList(apiContext, token, companyId) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+endpoints.getEmployeeList, {
+    const response = await apiContext.get(endpoints.hrmsApi+endpoints.getEmployeeList+companyId, {
+     
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -529,6 +531,7 @@ class Attandance {
 
     try {
       responseBody = await response.json();
+   console.log(endpoints.hrmsApi+endpoints.getEmployeeList+companyId)
     } catch {
       responseBody = {};
     }

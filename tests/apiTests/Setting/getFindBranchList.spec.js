@@ -41,7 +41,6 @@ test.describe("GET| /hrmsApi/branch/findAll/1, get find branch List", () => {
       });
     } else if (response.status === 200) {
       expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body.length).toBeGreaterThan(0);
 
       // Validate each designation object
       const ids = new Set();

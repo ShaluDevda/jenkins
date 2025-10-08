@@ -128,7 +128,7 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
     expect(rejectResponse.status, "Failed to reject the created AR.").toBe(200);
   });
 
-  test("Apply AR - Already applied scenario @happy ", async ({
+  test("Apply AR - Already applied scenario @happy", async ({
     request,
   }) => {
     const attendance = new Attandance();

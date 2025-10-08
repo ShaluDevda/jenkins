@@ -27,9 +27,16 @@ test.describe("POST| /hrmsApi/branch, Create Branch", () => {
     response = await organization.createBranch(request, authToken, payload);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
-   
-    // Validate after creating branch
+      let newStatus = holidaydata.activeStatus === 'AC' ? 'DE' : 'AC';
+      // Validate after creating branch
     response = await organization.getFindBranchList(request, authToken);
+    responsebody = response.body;
+    //active and deactive branch
+    const payload1 = {
+        ...responsebody[0],
+       activeStatus: newStatus
+    }
+    console.log(payload1);
 
     expect(response).toBeTruthy();
 ExpectResponse.okResponse(response.status);

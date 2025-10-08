@@ -192,10 +192,5 @@ test.describe("Apply AR (Attendance Regularization) API", () => {
       expect(cancelResponse.body.message).toBe("Data Found Successfully");
       expect(cancelResponse.body.data.status).toBe("CAN");
 
-  });
- 
-
-
-
-  
+  });  
 });

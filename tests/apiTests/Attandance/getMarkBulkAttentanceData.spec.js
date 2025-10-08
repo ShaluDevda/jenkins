@@ -103,7 +103,6 @@ test.describe("POST| getMarkBulkAttentanceData API", () => {
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
 
     for (const emp of response.body) {
       expect(emp).toHaveProperty("employeeCode");

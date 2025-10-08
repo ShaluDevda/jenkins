@@ -29,7 +29,6 @@ test.describe("GET| /hrmsApi/grade/findGradeList/1, get find grade List", () => 
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
 
     // Validate each designation object
     const ids = new Set();

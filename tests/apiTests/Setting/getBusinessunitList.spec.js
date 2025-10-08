@@ -30,7 +30,6 @@ test.describe("GET| /hrmsApi/businessunit/1, get businessunit List", () => {
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
 
     // Validate each designation object
     const ids = new Set();

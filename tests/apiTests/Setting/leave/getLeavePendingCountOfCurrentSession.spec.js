@@ -4,8 +4,8 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| /hrmsApi/leaveApply/getLeavePendingCountOfCurrentSession/1, get find grade List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/leaveApply/getLeavePendingCountOfCurrentSession/{companyId}, get find grade List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,12 +19,13 @@ test.describe("GET| /hrmsApi/leaveApply/getLeavePendingCountOfCurrentSession/1, 
     ExpectResponse.okResponse(loginResponse.status);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
   test("getLeavePendingCountOfCurrentSession - Happy flow @happy", async ({ request }) => {
     const leave = new Leave();
-    response = await leave.getLeavePendingCountOfCurrentSession(request, authToken);
+    response = await leave.getLeavePendingCountOfCurrentSession(request, authToken, companyId);
     expect(response).toBeTruthy();
-    ExpectResponse.okResponse(response.status);   
+    ExpectResponse.okResponse(response.status);
   });
 });

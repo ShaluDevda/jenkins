@@ -56,7 +56,7 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
     authToken = loginResponse.body.token;
   });
 
-  test("Get Paginated WFH Pending Request Details - Success scenario", async ({
+  test("@happy Get Paginated WFH Pending Request Details - Success scenario", async ({
     request,
   }) => {
     const response = await attendance.getPaginatedWFHPendingRequestDetails(
@@ -123,7 +123,7 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
     }
   });
 
-  test("WFH - Verify entry is removed/updated after Reject", async ({
+  test("@happy WFH - Verify entry is removed/updated after Reject", async ({
     request,
   }) => {
     // Use helper function to get successful response

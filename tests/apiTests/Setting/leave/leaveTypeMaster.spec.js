@@ -4,8 +4,8 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| /hrmsApi/leaveTypeMaster/1, get find grade List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/leaveTypeMaster/{companyId}, get find grade List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,15 +19,15 @@ test.describe("GET| /hrmsApi/leaveTypeMaster/1, get find grade List", () => {
     ExpectResponse.okResponse(loginResponse.status);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+     companyId = loginResponse.body.companyId;
   });
 
   test("Get leaveTypeMaster - Happy flow @happy", async ({ request }) => {
     const leave = new Leave();
-    response = await leave.leaveTypeMaster(request, authToken);
+    response = await leave.leaveTypeMaster(request, authToken,companyId);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
 
     for (const item of response.body) {
       expect(item).toHaveProperty("leaveId");

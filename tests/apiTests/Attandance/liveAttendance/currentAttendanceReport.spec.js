@@ -20,7 +20,7 @@ test.describe("Time & Attendance>Attendance get Attendane Log", () => {
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
   });
-  test("POST get Attendane Log - Happy flow @happy   ", async ({ request }) => {
+  test("POST get Attendane Log - Happy flow @happy", async ({ request }) => {
     const LiveAttendance = new liveAttendance();
 
     response = await LiveAttendance.currentAttendanceReport(

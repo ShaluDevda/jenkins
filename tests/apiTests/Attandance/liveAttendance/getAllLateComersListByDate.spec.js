@@ -21,7 +21,7 @@ test.describe("POST | Time & Attendance>Attendance>Live Attendance, get All Late
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
   });
-test("get all late comers list by date @happy   ", async ({ request }) => {
+test("get all late comers list by date @happy", async ({ request }) => {
      LiveAttendance = new liveAttendance();
     const response = await LiveAttendance.getAllLateComersListByDate(
       request,

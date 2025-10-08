@@ -198,7 +198,7 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
     ExpectResponse.internalServerError(response.status);
   });
 
-  test("Get Paginated WFH Completed Request Details  @happy- with Different page sizes", async ({
+  test("@happy, Get Paginated WFH Completed Request Details  - with Different page sizes", async ({
     request,
   }) => {
     const testCases = [
@@ -230,7 +230,7 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
     }
   });
 
-  test("Get Paginated WFH Completed Request Details @happy  - Sort by all fields with ASC and DESC", async ({ request }) => {
+  test("@happy, Get Paginated WFH Completed Request Details  - Sort by all fields with ASC and DESC", async ({ request }) => {
     const sortFields = ["name", "type", "date", "reason"];
     const sortDirections = ["ASC", "DESC"];
     

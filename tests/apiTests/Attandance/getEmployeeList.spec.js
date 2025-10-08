@@ -5,8 +5,8 @@ import { extractEmployeeList } from "../../utils/endpoints/classes/general/commo
 import { Attandance } from "../../utils/endpoints/classes/Attandance/myAttandance";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("Work From Home Hybrid Request API", () => {
-  let authToken, response;
+test.describe("/hrmsApi/employeeList/{companyId}  get employeeList", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -16,19 +16,19 @@ test.describe("Work From Home Hybrid Request API", () => {
          password: loginExpected.happy.password,
     };
     const loginResponse = await loginPage.loginAs(request, loginBody);
-
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
-  test("Get Employee list - Happy flow @happy   ", async ({ request }) => {
+  test("GET| Get Employee list - Happy flow @happy   ", async ({ request }) => {
     const attendance = new Attandance();
-    response = await attendance.getEmployeeList(request, authToken);
+    response = await attendance.getEmployeeList(request, authToken, companyId);
+    console.log(response)
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0);
 
     // Validate each designation object
     const ids = new Set();

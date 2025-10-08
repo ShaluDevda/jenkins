@@ -20,7 +20,7 @@ test.describe("GET | Time & Attendance>Attendance>Push Machine Attendance on Clo
     authToken = loginResponse.body.token;
   });
 
-  test("get unsuccessSyncAttendance @happy   ", async ({ request }) => {
+  test("get unsuccessSyncAttendance @happy", async ({ request }) => {
      attendance = new Attandance();
     const response = await attendance.unsuccessSyncAttendance(
       request,

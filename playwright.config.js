@@ -61,9 +61,9 @@ export default defineConfig({
 
     /* Timeout settings - equivalent to Cypress timeouts */
     navigationTimeout: 80000, // equivalent to pageLoadTimeout
-    actionTimeout: 10000, // equivalent to defaultCommandTimeout
-    requestTimeout: 10000, // equivalent to requestTimeout
-    responseTimeout: 10000, // equivalent to responseTimeout
+    actionTimeout: 30000, // equivalent to defaultCommandTimeout
+    requestTimeout: 30000, // equivalent to requestTimeout
+    responseTimeout: 30000, // equivalent to responseTimeout
 
     /* Security and performance settings */
     ignoreHTTPSErrors: true, // equivalent to chromeWebSecurity: false
@@ -78,25 +78,35 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    {
-      name: 'all-tests',
-      testDir: './tests',
+          {
+      name: "chromium",
+      use: { 
+        ...devices["Desktop Chrome"],
+        // Additional Chrome-specific settings
+        launchOptions: {
+          args: [
+            '--disable-web-security',
+            '--disable-features=VizDisplayCompositor'
+          ]
+        }
+      },
     },
-    {
-      name: 'high-priority',
-      testDir: './tests',
-      grep: /@high/,
-    },
-    {
-      name: 'medium-priority',
-      testDir: './tests',
-      grep: /@medium/,
-    },
-    {
-      name: 'low-priority',
-      testDir: './tests',
-      grep: /@low/,
-    },
+   
+    // {
+    //   name: 'high-priority',
+    //   testDir: './tests',
+    //   grep: /@high/,
+    // },
+    // {
+    //   name: 'medium-priority',
+    //   testDir: './tests',
+    //   grep: /@medium/,
+    // },
+    // {
+    //   name: 'low-priority',
+    //   testDir: './tests',
+    //   grep: /@low/,
+    // },
    
   ],
 

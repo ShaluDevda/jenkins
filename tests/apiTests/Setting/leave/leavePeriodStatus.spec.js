@@ -4,8 +4,8 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| /hrmsApi/leavePeriod/status/1, get find grade List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/leavePeriod/status/{companyId}, get find grade List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,11 +19,12 @@ test.describe("GET| /hrmsApi/leavePeriod/status/1, get find grade List", () => {
     ExpectResponse.okResponse(loginResponse.status);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+     companyId = loginResponse.body.companyId;
   });
 
   test("Get Leave  Period  list - Happy flow @happy", async ({ request }) => {
     const leave = new Leave();
-    response = await leave.getLeavePeriodstatus(request, authToken);
+    response = await leave.getLeavePeriodstatus(request, authToken, companyId);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     const item = response.body[0];

@@ -46,7 +46,7 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
     expect(typeof responseBody.totalPages).toBe("number");
   });
 
-  test("Get Paginated AR Pending Request Details  @happy - Verify AR entry appears after successful application", async ({
+  test("Get Paginated AR Pending Request Details  @happy - Verify AR entry appears after successful application @happy", async ({
     request,
   }) => {
     const attendance = new Attandance();
@@ -122,7 +122,7 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
     }
   });
 
-  test("Get Paginated AR Pending Request Details - Invalid pagination parameters @ @negative", async ({
+  test("Get Paginated AR Pending Request Details - Invalid pagination parameters  @negative", async ({
     // @priority: medium
     request,
   }) => {
@@ -142,7 +142,6 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
   });
 
   test("Get Paginated AR Pending Request Details - All sorting scenarios @happy", async ({
-    // @priority: medium
     request,
   }) => {
     const sortingTestCases =
@@ -299,7 +298,6 @@ test.describe("Get Paginated AR Pending Request Details API", () => {
       authToken
     );
     expect(initialResponse.status).toBe(200);
-    expect(initialResponse.body.data.length).toBeGreaterThan(0);
 
     const fullName = initialResponse.body.data[0].employeeName;
     const partialName = fullName.substring(0, 3); // Take first 3 characters

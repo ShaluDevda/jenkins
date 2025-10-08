@@ -10,10 +10,10 @@ test.describe("POST | Time & Attendance>Attendance>Live Attendance, allEmpLeaveT
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
-     loginPage = new LoginPage();
+    loginPage = new LoginPage();
     const loginBody = {
       username: loginExpected.happy.loginName,
-         password: loginExpected.happy.password,
+      password: loginExpected.happy.password,
     };
     const loginResponse = await loginPage.loginAs(request, loginBody);
 
@@ -21,18 +21,18 @@ test.describe("POST | Time & Attendance>Attendance>Live Attendance, allEmpLeaveT
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
   });
-test("allEmpLeaveTodayCount @happy   ", async ({ request }) => {
-     LiveAttendance = new liveAttendance();
+  test("allEmpLeaveTodayCount @happy", async ({ request }) => {
+    LiveAttendance = new liveAttendance();
     const response = await LiveAttendance.allEmpLeaveTodayCount(
       request,
       authToken,
       payload.getAllLateComersListByDateCount
     );
-    
+
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
 
-   
+
     // Assert response structure
     expect(response.body).toHaveProperty("count");
     expect(typeof response.body.count).toBe("number");
