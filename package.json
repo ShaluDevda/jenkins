@@ -9,7 +9,6 @@
     "test:api": "npx playwright test tests/apiTests",
     "test:happy": "npx playwright test --grep '@happy'",
     "test:negative": "npx playwright test --grep '@negative'",
-    "clean:playwright": "rimraf playwright-report test-results allure-results .playwright",
     "report:allure": "allure generate allure-results -o allure-report --clean && allure open allure-report",
     "report:html": "npx playwright show-report",
     "upload-report": "node utils/uploadReport.js",

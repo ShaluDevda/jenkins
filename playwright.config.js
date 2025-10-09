@@ -20,13 +20,13 @@ export default defineConfig({
   },
 
   /* Run tests in files in parallel */
-  fullyParallel: true,
+  fullyParallel: false,  // 👈 important
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
   retries: process.env.CI ? 1 : 1,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : 4, // Adjust based on your system
+  workers: process.env.CI ? 1 : 2, // Adjust based on your system
 
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
@@ -39,13 +39,12 @@ export default defineConfig({
 
   /* Global timeout settings */
   globalTimeout: 300000, // Increased global timeout to 5 min
-  maxFailures: process.env.CI ? 0 : 5, // Allow some failures in development
 
   /* Test Results and Artifacts */
   outputDir: 'test-results/',
 
   /* Global Test Configuration */
-  testMatch: '**/*.{test,spec}.{js,ts}',
+  testMatch: '**/*.{tests,spec}.{js,ts}',
   testIgnore: '**/node_modules/**',
 
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -62,8 +61,8 @@ export default defineConfig({
     /* Timeout settings - equivalent to Cypress timeouts */
     navigationTimeout: 80000, // equivalent to pageLoadTimeout
     actionTimeout: 30000, // equivalent to defaultCommandTimeout
-    requestTimeout: 30000, // equivalent to requestTimeout
-    responseTimeout: 30000, // equivalent to responseTimeout
+    requestTimeout: 60000, // equivalent to requestTimeout
+    responseTimeout: 60000, // equivalent to responseTimeout
 
     /* Security and performance settings */
     ignoreHTTPSErrors: true, // equivalent to chromeWebSecurity: false

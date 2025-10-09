@@ -4,8 +4,8 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("POST| /hrmsApi/employee/employeeInfo/emp/{employeeId},Get employeeInfo", () => {
-    let authToken, response, employeeId;
+test.describe("POST| /hrmsApi/leaveApply/employeeAllTypeLeaveEntry/emp/{employeeId}/{companyId}, Get EmployeeAllTypeLeaveEntry", () => {
+    let authToken, response, employeeId, companyId;
 
     test.beforeEach(async ({ request }) => {
         // Login to get authentication token
@@ -20,15 +20,14 @@ test.describe("POST| /hrmsApi/employee/employeeInfo/emp/{employeeId},Get employe
         expect(loginResponse.body.token).toBeTruthy();
         authToken = loginResponse.body.token;
         employeeId = loginResponse.body.employeeId;
+        companyId = loginResponse.body.companyId;
     });
 
-    test("Get employeeInfo - Happy flow @happy", async ({ request }) => {
+    test("Get EmployeeAllTypeLeaveEntry - Happy flow @happy", async ({ request }) => {
         const leave = new Leave();
-        response = await leave.getemployeeInfo(request, authToken, employeeId);
-      console.log(response)
+        response = await leave.getEmployeeAllTypeLeaveEntry(request, authToken, employeeId, companyId);
+        console.log(response)
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
-        ExpectResponse.successfullyDataFound(response.body.message);
-        expect(response.body.isSuccess).toBe(true);
     });
 });

@@ -26,9 +26,9 @@ test.describe("GET| /hrmsApi/holidays/findAllHoliday/{leavePeriodId}, get findAl
 
   });
 
-  test("Get findAllHolydays - Happy flow @happy", async ({ request }) => {
+  test("Get findAllHolidays - Happy flow @happy", async ({ request }) => {
 
-    response = await leave.findAllHolydays(request, authToken, leavePeriodId);
+    response = await leave.findAllHolidays(request, authToken, leavePeriodId);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
