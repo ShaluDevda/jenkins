@@ -1,7 +1,7 @@
 import { test, expect } from "@playwright/test";
 import { LoginPage } from "../../utils/endpoints/classes/login";
 import { Attandance } from "../../utils/endpoints/classes/Attandance/myAttandance";
-import inputsData from "../../../tests/fixtures/inputs.json" assert { type: "json" };
+import inputsData from "../../fixtures/inputs.json" assert { type: "json" };
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 /**

@@ -3,13 +3,13 @@ import { LoginPage } from "../../utils/endpoints/classes/login";
 import { Attandance} from "../../utils/endpoints/classes/Attandance/myAttandance";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 import applyWFHExpected from "../../fixtures/Response/applyWFH.json" assert { type: "json" };
-let authToken;
+let authToken, loginResponse;
 
 
-test.describe.skip("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
+test.describe("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
   let createdWFHIds = []; // Track WFH IDs created during tests
   // Helper function to try WFH with different dates until success
-  const tryWFHWithDifferentDates = async (attendance, request, payload, maxAttempts = 200) => {
+  const tryWFHWithDifferentDates = async (attendance, request, payload, maxAttempts = 300) => {
     
     for (let i = 0; i < maxAttempts; i++) {
       const testDate = new Date();
@@ -17,6 +17,10 @@ test.describe.skip("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
       
       const dynamicPayload = {
         ...applyWFHExpected.requestBody,
+        userId :loginResponse.body.userId,
+        userIdUpdate :loginResponse.body.userIdUpadate,
+        employeeId: loginResponse.body.employeeId,
+        companyId: loginResponse.body.companyId,
         fromDate: testDate.toISOString(),
         toDate: testDate.toISOString()
       };
@@ -41,7 +45,7 @@ test.describe.skip("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
       username: loginExpected.happy.loginName,
       password: loginExpected.happy.password,
     };
-    const loginResponse = await loginPage.loginAs(request, loginBody);
+     loginResponse = await loginPage.loginAs(request, loginBody);
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
@@ -54,11 +58,15 @@ test.describe.skip("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
     for (const wfhId of createdWFHIds) {
       const cancelPayload = {
         ...applyWFHExpected.rejectWFHPayload, // Using a base payload
+         userId :loginResponse.body.userId,
+        userIdUpdate :loginResponse.body.userIdUpadate,
+        employeeId: loginResponse.body.employeeId,
+        companyId: loginResponse.body.companyId,
         workFromHomeDateWiseId: wfhId,
         status: "CAN", // Set status to Cancel
         approvalorcancelremark: "Automated test cleanup"
       };
-      const cancelResponse = await attendance.rejectWFH(request, cancelPayload, authToken);
+      const cancelResponse = attendance.rejectWFH(request, cancelPayload, authToken);
       expect(cancelResponse.status).toBe(200);
     }
     createdWFHIds = []; // Reset the array for the next test
@@ -261,7 +269,7 @@ test.describe.skip("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
       employeeRemark: applyResult.payload.employeeRemark
     };
 
-    const rejectResponse = await attendance.rejectWFH(request, rejectPayload, authToken);
+    const rejectResponse = attendance.rejectWFH(request, rejectPayload, authToken);
     expect(rejectResponse.status).toBe(200);
     expect(rejectResponse.body).toBeTruthy();
 

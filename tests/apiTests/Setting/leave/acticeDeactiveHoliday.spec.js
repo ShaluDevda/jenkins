@@ -4,8 +4,8 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("POST| /hrmsApi/holidays/1, Active Deactive holiday", () => {
-    let authToken, response, holiday;
+test.describe("POST| /hrmsApi/holidays/{companyId}, Active Deactive holiday", () => {
+    let authToken, response, holiday, companyId;
 
     test.beforeEach(async ({ request }) => {
         // Login to get authentication token
@@ -19,6 +19,7 @@ test.describe("POST| /hrmsApi/holidays/1, Active Deactive holiday", () => {
         ExpectResponse.okResponse(loginResponse.status);
         expect(loginResponse.body.token).toBeTruthy();
         authToken = loginResponse.body.token;
+         companyId = loginResponse.body.companyId;
     });
 
     test("Active Deactive holiday - Happy flow @happy", async ({ request }) => {
@@ -26,7 +27,7 @@ test.describe("POST| /hrmsApi/holidays/1, Active Deactive holiday", () => {
         // Get the holiday data
         holiday = await leave.getfindHolidayByLeavePeroid(request, authToken);
         const holidaydata = holiday.body[0];
-
+  console.log('Fetched holiday data:', holidaydata);
         // Toggle activeStatus based on current value
         let newStatus = holidaydata.activeStatus === 'AC' ? 'DE' : 'AC';
         const payload = {
@@ -36,7 +37,7 @@ test.describe("POST| /hrmsApi/holidays/1, Active Deactive holiday", () => {
             updateUserId: loginExpected.happy.userId,
         };
         console.log('Toggling activeStatus from', holidaydata.activeStatus, 'to', newStatus);
-        response = await leave.activeDeactiveHoliday(request, authToken, payload);
+        response = await leave.activeDeactiveHoliday(request, authToken, payload, companyId);
         ExpectResponse.okResponse(response.status);
     });
 });

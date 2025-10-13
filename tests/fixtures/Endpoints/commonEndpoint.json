@@ -8,6 +8,8 @@
   "pending": "/PEN",
   "hrmsApi": "/hrmsApi",
   "Pending":"/Pending",
-  "Nonpending":"/Nonpending"
+  "Nonpending":"/Nonpending",
+  "emp":"/emp",
+  "leaveApply":"/leaveApply"
 
 }
