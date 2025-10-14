@@ -22,7 +22,7 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
     authToken = loginResponse.token;
   });
 
-  test.only("Apply AR -  Success scenario @happy", async ({ request }) => {
+  test("Apply AR -  Success scenario @happy", async ({ request }) => {
     const attendance = new Attandance();
     let response;
     let attempts = 0;
