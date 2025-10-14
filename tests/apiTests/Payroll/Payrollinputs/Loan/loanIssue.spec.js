@@ -31,7 +31,7 @@ let authToken, response, companyId, userId, employeeId, userIdUpadate;
     
   });
 
-test.only("POST| /loanIssue, Loan Issued - Happy flow @happy", async ({ request }) => {
+test("POST| /loanIssue, Loan Issued - Happy flow @happy", async ({ request }) => {
 
   const loanAmount = Math.floor(Math.random() * 10000) + 1000;
   const noOfEmi = Math.floor(Math.random() * 10) + 1;
