@@ -174,7 +174,6 @@ class Leave {
   async createLeaveScheme(request, token, payload) {
     const url = `${hrmsApi.hrmsApi}${endpoints.leaveScheme}`;
     const response = await request.post(url, {
-      method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
         Authorization: `Bearer ${token}`,
@@ -205,7 +204,7 @@ class Leave {
 
   async getemployeeInfo(request, token, employeeId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.getEmployeInfo}${employeeId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -261,10 +260,9 @@ class Leave {
     }
   }
 
-   async createHolidays(request, token, payload) {
+  async createHolidays(request, token, payload) {
     const url = `${hrmsApi.hrmsApi}${endpoints.holidays}`;
     const response = await request.post(url, {
-      method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
         Authorization: `Bearer ${token}`,
@@ -320,7 +318,6 @@ class Leave {
   async activeDeactiveHoliday(request, token, payload, companyId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.holidays}${companyId}`;
     const response = await request.post(url, {
-      method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
         Authorization: `Bearer ${token}`,
@@ -349,7 +346,7 @@ class Leave {
 
   async getfindAllLeaveScheme(request, token, leavePeriodId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.leaveScheme}${hrmsApi.findAll}${leavePeriodId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -434,7 +431,7 @@ class Leave {
 
   async getLeaveTypeFindByLeavePeroid(request, token, leavePeriodId, leaveSchemeId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.getLeaveTypeFindByLeavePeroid}${leavePeriodId}${"/"}${leaveSchemeId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -460,9 +457,9 @@ class Leave {
       };
     }
   }
-    async getEmployeeLeaveBalanceSummryList(request, token,employeeId, companyId) {
+  async getEmployeeLeaveBalanceSummryList(request, token, employeeId, companyId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.getEmployeeLeaveBalanceSummryList}${employeeId}${"/"}${companyId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -491,7 +488,7 @@ class Leave {
 
   async getActiveLeavePeriods(request, token, employeeId, companyId) {
     const url = `${hrmsApi.hrmsApi}${hrmsApi.leaveApply}${leaveEndpoints.getActiveLeavePeriods}${hrmsApi.emp}${"/"}${employeeId}${"/"}${companyId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -517,9 +514,9 @@ class Leave {
       };
     }
   }
-   async getEmployeeLeaveWiseRatio(request, token, employeeId, companyId) {
+  async getEmployeeLeaveWiseRatio(request, token, employeeId, companyId) {
     const url = `${hrmsApi.hrmsApi}${hrmsApi.leaveApply}${leaveEndpoints.leaveWiseRatio}${hrmsApi.emp}${"/"}${employeeId}${"/"}${companyId}`;
-    console.log(url)
+
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -545,7 +542,97 @@ class Leave {
       };
     }
   }
-  
+  async getCompensatoryOffById(request, token, compOffId) {
+    const url = `${hrmsApi.hrmsApi}${hrmsApi.compensatoryOff}${leaveEndpoints.compOffData}${"/"}${compOffId}`;
+
+    const response = await request.get(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
+    });
+
+    try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
+
+
+
+
+  async getPaginatedLeavePendingandNonpendingRequestDetails(request, token, flag, paginationBody) {
+    const url = `${hrmsApi.hrmsApi}${hrmsApi.leaveApply}${leaveEndpoints.getPendingLeaveRequests}${"/"}${flag}`;
+
+    const response = await request.post(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
+      data: paginationBody,
+    });
+
+    try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
+
+  async getPaginatedCompensatoryOffRequests(request, token, flag, paginationBody) {
+    const url = `${hrmsApi.hrmsApi}${leaveEndpoints.compensatoryOff}${leaveEndpoints.getPaginatedCompensatoryOffRequests}${"/"}${flag}`;
+
+    const response = await request.post(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
+      data: paginationBody,
+    });
+
+    try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
 }
 
 export { Leave };

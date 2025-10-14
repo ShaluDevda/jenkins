@@ -9,8 +9,27 @@ let authToken, loginResponse;
 test.describe("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
   let createdWFHIds = []; // Track WFH IDs created during tests
   // Helper function to try WFH with different dates until success
-  const tryWFHWithDifferentDates = async (attendance, request, payload, maxAttempts = 300) => {
-    
+  // maxAttempts is determined dynamically: use env var MAX_WFH_ATTEMPTS if provided,
+  // otherwise compute days until year-end (clamped between 30 and 365).
+  const tryWFHWithDifferentDates = async (attendance, request, payload, maxAttempts) => {
+    const msInDay = 24 * 60 * 60 * 1000;
+    const today = new Date();
+    if (typeof maxAttempts === "undefined" || maxAttempts === null) {
+      const envVal = parseInt(process.env.MAX_WFH_ATTEMPTS, 10);
+      if (!isNaN(envVal) && envVal > 0) {
+        maxAttempts = envVal;
+      } else {
+        const startNextYear = new Date(today.getFullYear() + 1, 0, 1);
+        const daysUntilYearEnd = Math.ceil((startNextYear - today) / msInDay);
+        // Ensure a reasonable number of attempts: at least 30, at most 365
+        maxAttempts = Math.min(Math.max(daysUntilYearEnd, 30), 365);
+      }
+    }
+
+    // Helpful debug message so test runners show how many attempts will be made
+    // (can be overridden via MAX_WFH_ATTEMPTS env var)
+    console.log(`tryWFHWithDifferentDates: maxAttempts=${maxAttempts}`);
+
     for (let i = 0; i < maxAttempts; i++) {
       const testDate = new Date();
       testDate.setDate(testDate.getDate() + i + 1); // Start from tomorrow
@@ -77,6 +96,7 @@ test.describe("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
     // Use helper function to get successful response
      const attendance = new Attandance();
     const result = await tryWFHWithDifferentDates(attendance, request, applyWFHExpected.requestBody);
+    console.log(result)
     expect(result.success).toBe(true);
 
     const response = result.response;
