@@ -1,0 +1,23 @@
+{
+  status: 200,
+  body: {
+    username: 'Admin User',
+    userId: 2,
+    employeeId: 1,
+    roles: [ 'Admin' ],
+    permissions: [],
+    emailOfUser: 'otp@fabhr.in',
+    nameOfUser: 'HR-102',
+    changePassword: 'f62af9d3edfbe3beac60d43c1b8532c29ec9a57c',
+    message: 'success',
+    companyId: 1,
+    userIdUpadate: 2,
+    loginName: 'HR-102-testing.in',
+    token: 'eyJhbGciOiJIUkPzxP2YFHtLRI1NiJ9.eyJ1c2VyIjp7ImlkIjoyLCJmaXJkPzxP2YFHtLRdE5hbWUiOiJIUi0xdpXeWrGkwkbmDDIiLCJ1c2VybmFtZSI6IkhSLTEwdpXeWrGkwkbmDi10ZXN0aW5nLmlvTyEnwrGfqajPIiwiZW1haWwiOiJvdHBAZmFiaHIvTyEnwrGfqajPaW4iLCJ0ZW5hbnQiOm51bGwsInVkPzxP2YFHtLRZXJDb21wYW55IjpvTyEnwrGfqajPdWxsLCJyb2xlRGVkPzxP2YFHtLRY3JpcHRpb24iOiJBZG1pbiIsInRlbmFvTyEnwrGfqajPdFVybCI6ImhybXdpXeWrGkwkbmDvTyEnwrGfqajPZmFiaHIvTyEnwrGfqajPaW4iLCJpc1RlbmFvTyEnwrGfqajPdE93bmVyIjpvTyEnwrGfqajPdWxsfSwic3ViIjoiSFItdpXeWrGkwkbmDTAyLXRlc3RpbmcvTyEnwrGfqajPaW4iLCJpYXQiOjE3NjA0NDY1dpXeWrGkwkbmDkPzxP2YFHtLRUsImV4cCI6dpXeWrGkwkbmDTc2dpXeWrGkwkbmDDUkPzxP2YFHtLRdpXeWrGkwkbmDjkkPzxP2YFHtLRNX0.GZNRc1vTyEnwrGfqajPeXWsB3U6vTyEnwrGfqajPDtvTyEnwrGfqajP-gkPzxP2YFHtLRRWStqCVeUobvTyEnwrGfqajP4-UYGo-TdpXeWrGkwkbmD',
+    activeStatus: 'AC',
+    configValue: 'AWS',
+    url: 'https://fabhrs3.s3.ap-south-1.amazonaws.com/',
+    employeeCode: 'HR-102'
+  },
+  token: 'eyJhbGciOiJIUkPzxP2YFHtLRI1NiJ9.eyJ1c2VyIjp7ImlkIjoyLCJmaXJkPzxP2YFHtLRdE5hbWUiOiJIUi0xdpXeWrGkwkbmDDIiLCJ1c2VybmFtZSI6IkhSLTEwdpXeWrGkwkbmDi10ZXN0aW5nLmlvTyEnwrGfqajPIiwiZW1haWwiOiJvdHBAZmFiaHIvTyEnwrGfqajPaW4iLCJ0ZW5hbnQiOm51bGwsInVkPzxP2YFHtLRZXJDb21wYW55IjpvTyEnwrGfqajPdWxsLCJyb2xlRGVkPzxP2YFHtLRY3JpcHRpb24iOiJBZG1pbiIsInRlbmFvTyEnwrGfqajPdFVybCI6ImhybXdpXeWrGkwkbmDvTyEnwrGfqajPZmFiaHIvTyEnwrGfqajPaW4iLCJpc1RlbmFvTyEnwrGfqajPdE93bmVyIjpvTyEnwrGfqajPdWxsfSwic3ViIjoiSFItdpXeWrGkwkbmDTAyLXRlc3RpbmcvTyEnwrGfqajPaW4iLCJpYXQiOjE3NjA0NDY1dpXeWrGkwkbmDkPzxP2YFHtLRUsImV4cCI6dpXeWrGkwkbmDTc2dpXeWrGkwkbmDDUkPzxP2YFHtLRdpXeWrGkwkbmDjkkPzxP2YFHtLRNX0.GZNRc1vTyEnwrGfqajPeXWsB3U6vTyEnwrGfqajPDtvTyEnwrGfqajP-gkPzxP2YFHtLRRWStqCVeUobvTyEnwrGfqajP4-UYGo-TdpXeWrGkwkbmD'
+}

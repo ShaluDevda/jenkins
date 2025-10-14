@@ -6,25 +6,23 @@ import ExpectResponse from "../../utils/endpoints/expect/expectResponse";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("Get All Checkin Detail", () => {
-  let token;
+  let token,employeeId;
   const loginBody = {
     username: loginExpected.happy.loginName,
        password: loginExpected.happy.password,
   };
 
-  test.beforeEach("GET |-hrmsApi/attendanceLog/getAllCheckInDetails/emp/368  Get authentication token", async ({ request }) => {
+  test.beforeEach("GET |-hrmsApi/attendanceLog/getAllCheckInDetails/emp/{employeeId}  Get authentication token", async ({ request }) => {
     const loginPage = new LoginPage();
     const loginResp = await loginPage.loginAs(request, loginBody);
     token = loginResp.body.token;
+    employeeId = loginResp.body.employeeId;
     expect(token).toBeTruthy();
   });
 
   test("Get all checkin data @happy", async ({ request }) => {
     const getAllCheckinDetails = new Attandance();
-    const response = await getAllCheckinDetails.getAllCheckinDetails(
-      request,
-      token
-    );
+    const response = await getAllCheckinDetails.getAllCheckinDetails(request, token, employeeId);
 
     // Basic response validation
     expect(response).toBeTruthy();
@@ -75,7 +73,8 @@ test.describe("Get All Checkin Detail", () => {
     const response =
       await getAllCheckinDetails.getAllCheckinDetailsWithoutUsername(
         request,
-        token
+        token,
+        companyId
       );
     // Validate error response structure
     expect(response).toBeTruthy();
