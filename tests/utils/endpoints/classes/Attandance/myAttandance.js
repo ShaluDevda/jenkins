@@ -1,8 +1,7 @@
 import endpoints from "../../../../fixtures/Endpoints/commonEndpoint.json" assert { type: "json" };
 import attandanceEndpoints from "../../../../fixtures/Endpoints/Attandance.json" assert { type: "json" };
-
 import inputsData from "../../../../fixtures/inputs.json" assert { type: "json" };
-import { url } from "inspector";
+
 let responseBody;
 class Attandance {
   static getCurrentDateTime() {
@@ -39,14 +38,14 @@ class Attandance {
       flag: null,
       time: currentDateTime.time,
       hhMm: null,
-      companyId: 1,
+      companyId: additionalData.companyId || null, // Use dynamic company ID from login
       in_out: inOut,
       sNo: null,
-      tktNo: inputsData.username,
+      tktNo: additionalData.username || inputsData.username,
       intime: null,
       outtime: null,
       address: null,
-      employeeId: 368,
+      employeeId: additionalData.employeeId || null, // Use dynamic employee ID from login
       fileLocation: null,
       firstName: null,
       lastName: null,
@@ -54,11 +53,11 @@ class Attandance {
       employeeCode: null,
     };
 
-    // Merge with any additional data
+    // Merge with any additional data (this will override the base payload if same keys exist)
     return { ...basePayload, ...additionalData };
   }
-  async getAllCheckinDetails(request, token) {
-    const response = await request.get(endpoints.hrmsApi+attandanceEndpoints.getAllCheckinData, {
+  async getAllCheckinDetails(request, token, employeeId) {
+    const response = await request.get(endpoints.hrmsApi + attandanceEndpoints.getAllCheckinData + employeeId, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -85,8 +84,8 @@ class Attandance {
     }
   }
 
-  async getAllCheckinDetailsWithoutUsername(request, token) {
-    const response = await request.get(endpoints.hrmsApi+attandanceEndpoints.getAllCheckinData, {
+  async getAllCheckinDetailsWithoutUsername(request, token, employeeId) {
+    const response = await request.get(endpoints.hrmsApi + attandanceEndpoints.getAllCheckinData + employeeId, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -112,11 +111,11 @@ class Attandance {
     }
   }
 
-   async getAllCheckinDetailsWithouttenantid(request) {
-    const response = await request.get(endpoints.hrmsApi+attandanceEndpoints.getAllCheckinData, {
+  async getAllCheckinDetailsWithouttenantid(request, employeeId) {
+    const response = await request.get(endpoints.hrmsApi + attandanceEndpoints.getAllCheckinData + employeeId, {
       method: "GET",
       headers: {
-       username: inputsData.username,
+        username: inputsData.username,
       },
     });
 
@@ -137,7 +136,7 @@ class Attandance {
   }
 
   async postWebAttendance(request, token, attendanceData) {
-    const response = await request.post(endpoints.hrmsApi+attandanceEndpoints.webAttendance, {
+    const response = await request.post(endpoints.hrmsApi + attandanceEndpoints.webAttendance, {
       method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -172,7 +171,7 @@ class Attandance {
    * @returns {Object} Response object with status and body
    */
   async applyWFH(request, wfhData, token) {
-    const response = await request.post(endpoints.hrmsApi+attandanceEndpoints.applyWFH, {
+    const response = await request.post(endpoints.hrmsApi + attandanceEndpoints.applyWFH, {
       method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -206,7 +205,7 @@ class Attandance {
    * @returns {Object} Response object with status and body
    */
   async applyWFHWithoutToken(request, wfhData) {
-    const response = await request.post(endpoints.hrmsApi+attandanceEndpoints.applyWFH, {
+    const response = await request.post(endpoints.hrmsApi + attandanceEndpoints.applyWFH, {
       method: "POST",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -240,7 +239,7 @@ class Attandance {
    * @returns {Object} Response object with status and body
    */
   async rejectWFH(request, rejectWFHData, token) {
-    const response = await request.post(endpoints.hrmsApi+attandanceEndpoints.applyWFH, {
+    const response = await request.post(endpoints.hrmsApi + attandanceEndpoints.applyWFH, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -258,7 +257,7 @@ class Attandance {
         status: response.status(),
         body: responseBody,
       };
-     
+
     } catch (error) {
       const responseText = await response.text();
       return {
@@ -271,7 +270,7 @@ class Attandance {
 
   async applyAR(apiContext, arBody, token) {
     const authToken = token || this.token;
-    const response = await apiContext.post(endpoints.hrmsApi+attandanceEndpoints.applyAR, {
+    const response = await apiContext.post(endpoints.hrmsApi + attandanceEndpoints.applyAR, {
       data: arBody,
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -295,51 +294,18 @@ class Attandance {
     };
   }
 
-  async getPaginatedARPendingRequestDetails(apiContext, paginationBody, token) {
+  async getPaginatedARPendingRequestDetails(apiContext, paginationBody, token, employeeId, flag) {
     const authToken = token || this.token;
-    const response = await apiContext.post(
-      endpoints.hrmsApi+attandanceEndpoints.getPaginatedARPendingRequestDetails,
-      {
-        data: paginationBody,
-        headers: {
-          "Content-Type": inputsData.ContentType,
-          tenantId: inputsData.tenantId,
-          username: inputsData.username,
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        },
-      }
-    );
-
-    try {
-      responseBody = await response.json();
-    } catch {
-      responseBody = {};
-    }
-
-    return {
-      status: response.status(),
-      body: responseBody,
-    };
-  }
-
-  async getPaginatedARNonPendingRequestDetails(
-    apiContext,
-    paginationBody,
-    token
-  ) {
-    const authToken = token || this.token;
-    const response = await apiContext.post(
-      endpoints.hrmsApi+attandanceEndpoints.getPaginatedARNonPendingRequestDetails,
-      {
-        data: paginationBody,
-        headers: {
-          "Content-Type": inputsData.ContentType,
-          tenantId: inputsData.tenantId,
-          username: inputsData.username,
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        },
-      }
-    );
+    const url = `${endpoints.hrmsApi}${attandanceEndpoints.applyAR}${attandanceEndpoints.getPaginatedARPendingRequestDetails}${endpoints.emp}/${employeeId}/${flag}`;
+    const response = await apiContext.post(url, {
+      data: paginationBody,
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+    });
 
     try {
       responseBody = await response.json();
@@ -355,7 +321,7 @@ class Attandance {
 
   async applyWFH(apiContext, wfhBody, token) {
     const authToken = token || this.token;
-    const response = await apiContext.post(endpoints.hrmsApi+attandanceEndpoints.applyWFH, {
+    const response = await apiContext.post(endpoints.hrmsApi + attandanceEndpoints.applyWFH, {
       data: wfhBody,
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -379,21 +345,21 @@ class Attandance {
   async getPaginatedWFHPendingRequestDetails(
     apiContext,
     paginationBody,
-    token
+    token,
+    employeeId,
+    flag
   ) {
     const authToken = token || this.token;
-    const response = await apiContext.post(endpoints.hrmsApi+
-      attandanceEndpoints.getPaginatedWFHPendingRequestDetails,
-      {
-        data: paginationBody,
-        headers: {
-          "Content-Type": inputsData.ContentType,
-          tenantId: inputsData.tenantId,
-          username: inputsData.username,
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        },
-      }
-    );
+    const url = `${endpoints.hrmsApi}${attandanceEndpoints.applyWFH}${attandanceEndpoints.getPaginatedWFHPendingRequestDetails}${endpoints.emp}/${employeeId}/${flag}`;
+    const response = await apiContext.post(url, {
+      data: paginationBody,
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+        ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+      },
+    });
 
     try {
       responseBody = await response.json();
@@ -407,40 +373,11 @@ class Attandance {
     };
   }
 
-  async getPaginatedWFHNonPendingRequestDetails(
-    apiContext,
-    paginationBody,
-    token
-  ) {
-    const authToken = token || this.token;
-    const response = await apiContext.post(endpoints.hrmsApi+
-      attandanceEndpoints.getPaginatedWFHNonPendingRequestDetails,
-      {
-        data: paginationBody,
-        headers: {
-          "Content-Type": inputsData.ContentType,
-          tenantId: inputsData.tenantId,
-          username: inputsData.username,
-          ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
-        },
-      }
-    );
 
-    try {
-      responseBody = await response.json();
-    } catch {
-      responseBody = {};
-    }
 
-    return {
-      status: response.status(),
-      body: responseBody,
-    };
-  }
-
-  async findAllPreviousMonthWithCurrent(request, authToken) {
-    const response = await request.get(endpoints.hrmsApi+
-      endpoints.findAllPreviousMonthWithCurrent,
+  async findAllPreviousMonthWithCurrent(request, authToken, companyId) {
+    const response = await request.get(endpoints.hrmsApi +
+      endpoints.findAllPreviousMonthWithCurrent + companyId,
       {
         method: "GET",
         headers: {
@@ -467,8 +404,8 @@ class Attandance {
       };
     }
   }
-  async getDesignation(request, authToken) {
-    const response = await request.get(endpoints.hrmsApi+endpoints.getDesignation, {
+  async getDesignation(request, authToken, companyId) {
+    const response = await request.get(endpoints.hrmsApi + attandanceEndpoints.designation + companyId, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -496,7 +433,7 @@ class Attandance {
 
   async hybridWfh(apiContext, paylod, token) {
     const authToken = token || this.token;
-    const response = await apiContext.post(endpoints.hrmsApi+attandanceEndpoints.hybridWFH, {
+    const response = await apiContext.post(endpoints.hrmsApi + attandanceEndpoints.hybridWFH, {
       data: paylod,
       headers: {
         "Content-Type": inputsData.ContentType,
@@ -519,8 +456,8 @@ class Attandance {
   }
   async getEmployeeList(apiContext, token, companyId) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+endpoints.getEmployeeList+companyId, {
-     
+    const response = await apiContext.get(endpoints.hrmsApi + endpoints.getEmployeeList + companyId, {
+
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -531,7 +468,7 @@ class Attandance {
 
     try {
       responseBody = await response.json();
-   console.log(endpoints.hrmsApi+endpoints.getEmployeeList+companyId)
+      console.log(endpoints.hrmsApi + endpoints.getEmployeeList + companyId)
     } catch {
       responseBody = {};
     }
@@ -569,9 +506,9 @@ class Attandance {
     };
   }
 
-   async getattendanceReport(apiContext, token) {
+  async getattendanceReport(apiContext, token) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+ attandanceEndpoints.getattendanceReport, {
+    const response = await apiContext.get(endpoints.hrmsApi + attandanceEndpoints.getattendanceReport, {
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -589,12 +526,12 @@ class Attandance {
     return {
       status: response.status(),
       body: responseBody,
-       headers: response.headers(),
+      headers: response.headers(),
     };
   }
-   async getLiveAttendanceLocation(apiContext, token) {
+  async getLiveAttendanceLocation(apiContext, token) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+ attandanceEndpoints.getLiveattendanceLocation, {
+    const response = await apiContext.get(endpoints.hrmsApi + attandanceEndpoints.getLiveattendanceLocation, {
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -616,7 +553,7 @@ class Attandance {
   }
   async getActiveWFHEmployees(apiContext, token) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+ attandanceEndpoints.getActiveWFHEmployees, {
+    const response = await apiContext.get(endpoints.hrmsApi + attandanceEndpoints.getActiveWFHEmployees, {
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -636,9 +573,9 @@ class Attandance {
       body: responseBody,
     };
   }
-   async unsuccessSyncAttendance(apiContext, token) {
+  async unsuccessSyncAttendance(apiContext, token) {
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+ attandanceEndpoints.unsuccessSyncAttendance, {
+    const response = await apiContext.get(endpoints.hrmsApi + attandanceEndpoints.unsuccessSyncAttendance, {
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -658,11 +595,11 @@ class Attandance {
       body: responseBody,
     };
   }
-   async attendanceSyncViaDate(apiContext, token) {
-     // Get current date in yyyy-MM-dd format (adjust as your API expects)
-  const today = new Date().toISOString().split("T")[0];
+  async attendanceSyncViaDate(apiContext, token) {
+    // Get current date in yyyy-MM-dd format (adjust as your API expects)
+    const today = new Date().toISOString().split("T")[0];
     const authToken = token || this.token;
-    const response = await apiContext.get(endpoints.hrmsApi+ attandanceEndpoints.attendanceSyncViaDate +today, {
+    const response = await apiContext.get(endpoints.hrmsApi + attandanceEndpoints.attendanceSyncViaDate + today, {
       headers: {
         "Content-Type": inputsData.ContentType,
         tenantId: inputsData.tenantId,
@@ -711,7 +648,7 @@ class Attandance {
     };
   }
 
-   async getMarkBulkAttentanceData(apiContext, payload, token) {
+  async getMarkBulkAttentanceData(apiContext, payload, token) {
     const authToken = token || this.token;
     const response = await apiContext.put(
       `${endpoints.hrmsApi}${attandanceEndpoints.applyWFH}${attandanceEndpoints.deactiveFlagEmployeeWise}`,
@@ -740,7 +677,7 @@ class Attandance {
   }
 
   async getAllPresentListByDateCount(request, token, payload) {
-   const url = endpoints.hrmsApi + attandanceEndpoints.getAllPresentListByDateCount;
+    const url = endpoints.hrmsApi + attandanceEndpoints.getAllPresentListByDateCount;
     const response = await request.post(url, {
       method: "POST",
       headers: {
@@ -827,8 +764,8 @@ class Attandance {
       };
     }
   }
- async getMarkBulkAttentanceWithDate(request, params, token, payload) {
-   const url = endpoints.hrmsApi + attandanceEndpoints.getMarkBulkAttentanceData+params;
+  async getMarkBulkAttentanceWithDate(request, params, token, payload) {
+    const url = endpoints.hrmsApi + attandanceEndpoints.getMarkBulkAttentanceData + params;
     const response = await request.post(url, {
       method: "POST",
       headers: {
@@ -857,7 +794,7 @@ class Attandance {
   }
 
   async updateAttendaceData(request, token, payload) {
-   const url = endpoints.hrmsApi + attandanceEndpoints.updateAttendaceData;
+    const url = endpoints.hrmsApi + attandanceEndpoints.updateAttendaceData;
     const response = await request.post(url, {
       method: "POST",
       headers: {

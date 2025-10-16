@@ -60,6 +60,9 @@ async badRequestMessage(property) {
 async successfullyDataFound(property) {
   expect(property).toBe(constants.successfullyDataFound);
 }
+async serverNotResponding(property) {
+  expect(property).toBe(constants.serverNotResponding);
+}
 }
 
 export default new ExpectResponse();

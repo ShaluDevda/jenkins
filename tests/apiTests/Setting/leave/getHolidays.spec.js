@@ -4,8 +4,9 @@ import ExpectResponse from "../../../utils/endpoints/expect/expectResponse.js";
 import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| /hrmsApi/holidays/hloiday/253, get Holydays", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/holidays/hloiday/{holidayID}, get Holydays", () => {
+  let authToken, response,leavePeriodId,holidayID;
+  const leave = new Leave();
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,11 +20,16 @@ test.describe("GET| /hrmsApi/holidays/hloiday/253, get Holydays", () => {
     ExpectResponse.okResponse(loginResponse.status);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    const companyId = loginResponse.body.companyId;
+    const leaveresponse = await leave.getLeavePeriodstatus(request, authToken, companyId);
+    leavePeriodId = leaveresponse.body[0].leavePeriodId;
+    response = await leave.findAllHolydays(request, authToken, leavePeriodId);
+    holidayID = response.body[0].holidayId;
+    console.log(response)
   });
 
   test("Get Holydays - Happy flow @happy", async ({ request }) => {
-    const leave = new Leave();
-    response = await leave.getHolidays(request, authToken);
+    response = await leave.getHolidays(request, authToken, holidayID);
     console.log(response)
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
@@ -55,6 +61,6 @@ test.describe("GET| /hrmsApi/holidays/hloiday/253, get Holydays", () => {
       expect(first).toHaveProperty(key);
     });
 
-  
+
   });
 });

@@ -14,14 +14,15 @@ class PunchTime {
    * @returns {Object} Response object with status and body
    */
   async getPunchTimeDetails(request, token, employeeCode, companyId) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}/${employeeCode}/${companyId}`;
+    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}${"/"}${employeeCode}${"/"}${companyId}`;
+    console.log(url)
     const response = await request.get(url, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,
         "Authorization": `Bearer ${token}`,
         tenantId: inputsData.tenantId,
-        username: employeeCode,
+        username: inputsData.username,
       },
     });
 
@@ -49,14 +50,14 @@ class PunchTime {
    * @returns {Object} Response object with status and body
    */
   async getPunchTimeDetailsWithoutToken(request, employeeCode, companyId) {
-    const url = `${endpoints.punchTime}/${employeeCode}/${companyId}`;
+    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}${"/"}${employeeCode}${"/"}${companyId}`;
     
     const response = await request.get(url, {
       method: "GET",
       headers: {
         "Content-Type":inputsData.ContentType,
         tenantId: inputsData.tenantId,
-        username: employeeCode,
+        username: inputsData.username,
       },
     });
 
@@ -85,7 +86,7 @@ class PunchTime {
    * @returns {Object} Response object with status and body
    */
   async getPunchTimeDetailsWithoutUsername(request, token, employeeCode, companyId) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}/${employeeCode}/${companyId}`;
+    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}${"/"}${employeeCode}${"/"}${companyId}`;
     
     const response = await request.get(url, {
       method: "GET",
@@ -123,15 +124,15 @@ class PunchTime {
    * @returns {Object} Response object with status and body
    */
   async getPunchTimeDetailsWithInvalidCompany(request, token, employeeCode, invalidCompanyId) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}/${employeeCode}/${invalidCompanyId}`;
+    const url = `${hrmsApi.hrmsApi}${endpoints.punchTime}${"/"}${employeeCode}${"/"}${companyId}`;
     
     const response = await request.get(url, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,
         "Authorization": `Bearer ${token}`,
-        tenantId: inputsData.tenantId,
-        username: employeeCode,
+         tenantId: inputsData.tenantId,
+        username: inputsData.username,
       },
     });
 

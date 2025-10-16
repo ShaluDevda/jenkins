@@ -5,28 +5,29 @@ import ExpectResponse from "../../utils/endpoints/expect/expectResponse.js";
 import { Organization } from "../../utils/endpoints/classes/settings/Organization.js";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| /hrmsApi/businessunit/1, get businessunit List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/businessunit/{companyID}, get businessunit List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
     const loginPage = new LoginPage();
     const loginBody = {
       username: loginExpected.happy.loginName,
-         password: loginExpected.happy.password,
+      password: loginExpected.happy.password,
     };
     const loginResponse = await loginPage.loginAs(request, loginBody);
 
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
   test("Get businessunit list - Happy flow @happy", async ({
     request,
   }) => {
     const organization = new Organization();
-    response = await organization.getBusinessunitList(request, authToken);
+    response = await organization.getBusinessunitList(request, authToken, companyId);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
@@ -48,8 +49,8 @@ test.describe("GET| /hrmsApi/businessunit/1, get businessunit List", () => {
     const organization = new Organization();
     response = await organization.getBusinessunitListWithoutTanantIdAndUserName(
       request,
-      authToken
-    );
+      authToken,
+      companyId);
     ExpectResponse.invalidAccess(response.body.message);
     // Validate each designation object
     ExpectResponse.forbiddenRequest(response.status);

@@ -6,10 +6,10 @@
     "days": null,
     "workfromhometype": "SD",
     "employeeRemark": "test",
-    "userId": 2,
-    "employeeId": 1,
-    "companyId": 1,
-    "userIdUpdate": 2,
+    "userId": null,
+    "employeeId": null,
+    "companyId": null,
+    "userIdUpdate": null,
     "status": "PEN"
   },
   "successResponse": {

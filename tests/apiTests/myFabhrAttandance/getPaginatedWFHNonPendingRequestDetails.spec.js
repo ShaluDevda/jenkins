@@ -6,8 +6,9 @@ import applyWFHExpected from "../../fixtures/Response/applyWFH.json" assert { ty
 import ExpectResponse from "../../utils/endpoints/expect/expectResponse";
 import getPaginatedWFHExpected from "../../fixtures/Response/getPaginatedWFHExpected.json" assert { type: "json" };
 
-test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestDetails/emp/71/Nonpending, Get Paginated WFH Non Pending Request Details API", () => {
-  let authToken, attendance;
+let flag = "Nonpending"
+test.describe("POST| -/workfromhomerequest/getPaginatedWFHPendingRequestDetails/emp/{employeeId}/{flag}, Get Paginated WFH Non Pending Request Details API", () => {
+  let authToken, attendance, employeeId;
   attendance = new Attandance();
   const tryWFHWithDifferentDates = async (
     attendance,
@@ -46,22 +47,26 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
     const loginPage = new LoginPage();
     const loginBody = {
       username: loginExpected.happy.loginName,
-     password: loginExpected.happy.password,
+      password: loginExpected.happy.password,
     };
 
     const loginResponse = await loginPage.loginAs(request, loginBody);
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    employeeId = loginResponse.body.employeeId
+
   });
 
   test("Get Paginated WFH Completed Request Details - Success scenario @happy", async ({
     request,
   }) => {
-    const response = await attendance.getPaginatedWFHNonPendingRequestDetails(
+    const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
       getPaginatedWFHExpected.baseRequestBody,
-      authToken
+      authToken,
+      employeeId,
+      flag
     );
     const responseBody = response.body;
     "WFH Paginated Response:", responseBody;
@@ -83,10 +88,12 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
   }) => {
     // Step 1: Get initial count
     const initialResponse =
-      await attendance.getPaginatedWFHNonPendingRequestDetails(
+      await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         getPaginatedWFHExpected.baseRequestBody,
-        authToken
+        authToken, employeeId,
+        flag
+
       );
     const initialCount = initialResponse.body.totalItems;
     // Step 2: Apply WFH
@@ -101,7 +108,7 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
 
       // Step 4: Fetch updated data
       const updatedResponse =
-        await attendance.getPaginatedWFHNonPendingRequestDetails(
+        await attendance.getPaginatedWFHPendingRequestDetails(
           request,
           getPaginatedWFHExpected.baseRequestBody,
           authToken
@@ -144,7 +151,7 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
       ...applyWFHExpected.rejectWFHPayload,
       workFromHomeDateWiseId: wfhId,
     };
-    const rejectResponse = await attendance.rejectWFH(
+    const rejectResponse = attendance.rejectWFH(
       request,
       rejectPayload,
       authToken
@@ -157,7 +164,9 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
       await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         getPaginatedWFHExpected.baseRequestBody,
-        authToken
+        authToken,
+        employeeId,
+        flag
       );
     const updatedData = updatedResponse.body.data;
 
@@ -175,10 +184,12 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
       ...getPaginatedWFHExpected.baseRequestBody,
       currentPage: -1, // Invalid negative page
     };
-    const response = await attendance.getPaginatedWFHNonPendingRequestDetails(
+    const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
       invalidRequestBody,
-      authToken
+      authToken,
+       employeeId,
+      flag
     );
     const responseBody = response.body;
     "WFH Paginated Response:", responseBody;
@@ -191,9 +202,12 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
   test("Get Paginated WFH Completed Request Details - Without token @negative", async ({
     request,
   }) => {
-    const response = await attendance.getPaginatedWFHNonPendingRequestDetails(
+    const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
-      getPaginatedWFHExpected.baseRequestBody
+      getPaginatedWFHExpected.baseRequestBody,
+      null,
+     employeeId,
+      flag
     );
     ExpectResponse.internalServerError(response.status);
   });
@@ -202,13 +216,13 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
     request,
   }) => {
     const testCases = [
-      { itemPerPage:5 },
-      { itemPerPage: 10},
-      { itemPerPage: 15},
-      { itemPerPage: 20},
-      { itemPerPage: 50},
-      { itemPerPage: 500},
-      { itemPerPage: 100},
+      { itemPerPage: 5 },
+      { itemPerPage: 10 },
+      { itemPerPage: 15 },
+      { itemPerPage: 20 },
+      { itemPerPage: 50 },
+      { itemPerPage: 500 },
+      { itemPerPage: 100 },
     ];
 
     for (const testCase of testCases) {
@@ -217,10 +231,12 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
         itemPerPage: testCase.itemPerPage,
       };
 
-      const response = await attendance.getPaginatedWFHNonPendingRequestDetails(
+      const response = await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         requestBody,
-        authToken
+        authToken,
+        employeeId,
+        flag
       );
 
       const responseBody = response.body;
@@ -233,27 +249,29 @@ test.describe("POST| -hrmsApi/workfromhomerequest/getPaginatedWFHPendingRequestD
   test("@happy, Get Paginated WFH Completed Request Details  - Sort by all fields with ASC and DESC", async ({ request }) => {
     const sortFields = ["name", "type", "date", "reason"];
     const sortDirections = ["ASC", "DESC"];
-    
+
     for (const field of sortFields) {
       for (const direction of sortDirections) {
         const requestBody = {
-        ...getPaginatedWFHExpected.baseRequestBody,
+          ...getPaginatedWFHExpected.baseRequestBody,
           sortBy: field,
           sortDirection: direction
         };
-        
-        
-     const initialResponse =  await attendance.getPaginatedWFHNonPendingRequestDetails(
-        request,
-        requestBody,
-        authToken
-      );
+
+
+        const initialResponse = await attendance.getPaginatedWFHPendingRequestDetails(
+          request,
+          requestBody,
+          authToken, 
+          employeeId,
+          flag
+        );
         const responseBody = initialResponse.body;
 
         expect(initialResponse.status).toBe(200);
         expect(responseBody).toHaveProperty("data");
         expect(Array.isArray(responseBody.data)).toBe(true);
-        
+
         // Verify that the response contains the expected structure
         if (responseBody.data.length > 0) {
           const firstItem = responseBody.data[0];

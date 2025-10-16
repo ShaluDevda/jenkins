@@ -1,8 +1,7 @@
 {
   "login": "/hrmsApi/login",
   "logout": "/hrmsApi/userLogOut",
-  "getDesignation":"/designation/null/1",
-  "findAllPreviousMonthWithCurrent":"/findAllPreviousMonthWithCurrent/1",
+  "findAllPreviousMonthWithCurrent":"/findAllPreviousMonthWithCurrent/",
   "findAll":"/findAll/",
   "getEmployeeList":"/employee/employeeList/",
   "pending": "/PEN",

@@ -25,7 +25,7 @@ test.describe("/hrmsApi/employeeList/{companyId}  get employeeList", () => {
   test("GET| Get Employee list - Happy flow @happy   ", async ({ request }) => {
     const attendance = new Attandance();
     response = await attendance.getEmployeeList(request, authToken, companyId);
-    console.log(response)
+    
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);

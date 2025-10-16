@@ -6,32 +6,35 @@ import applyARExpected from "../../fixtures/Response/applyARExpected.json" asser
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPendingRequestDetails/emp/71/Nonpending, Get Paginated AR non Pending Request Details API", () => {
-  let authToken, loginBody, loginPage;
+  let authToken, loginBody, loginPage, employeeId;
   let attendance = new Attandance();
-  
+  let flag = "Nonpending"
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
-     loginPage = new LoginPage();
-     loginBody = {
+    loginPage = new LoginPage();
+    loginBody = {
       username: loginExpected.happy.loginName,
-         password: loginExpected.happy.password,
+      password: loginExpected.happy.password,
     };
-    
+
     const loginResponse = await loginPage.loginAs(request, loginBody);
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.token).toBeTruthy();
     authToken = loginResponse.token;
-    
+    employeeId = loginResponse.body.employeeId
+
+
   });
 
   test("Get Paginated AR Non Pending Request Details - Success scenario @happy", async ({ request }) => {
-    const response = await attendance.getPaginatedARNonPendingRequestDetails(
-      request, 
-      getPaginatedARPendingRequestDetailsExpected.baseRequestBody, 
-      authToken
+    const response = await attendance.getPaginatedARPendingRequestDetails(
+      request,
+      getPaginatedARPendingRequestDetailsExpected.baseRequestBody,
+      authToken, employeeId,
+      flag
     );
-    
+
     const responseBody = response.body;
 
     expect(response.status).toBe(200);
@@ -39,7 +42,7 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
     expect(responseBody).toHaveProperty("currentPage");
     expect(responseBody).toHaveProperty("totalItems");
     expect(responseBody).toHaveProperty("totalPages");
-    
+
     expect(Array.isArray(responseBody.data)).toBe(true);
     expect(typeof responseBody.currentPage).toBe("number");
     expect(typeof responseBody.totalItems).toBe("number");
@@ -48,12 +51,13 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
 
   test(" Get Paginated AR Non Pending(completed) Request Details - Verify AR entry appears after successful application @happy", async ({ request }) => {
     // First, get initial count of pending AR requests
-    const initialResponse = await attendance.getPaginatedARNonPendingRequestDetails(
-      request, 
-      getPaginatedARPendingRequestDetailsExpected.baseRequestBody, 
-      authToken
+    const initialResponse = await attendance.getPaginatedARPendingRequestDetails(
+      request,
+      getPaginatedARPendingRequestDetailsExpected.baseRequestBody,
+      authToken, employeeId,
+      flag
     );
-    
+
     const initialCount = initialResponse.body.totalItems;
 
     // Apply AR
@@ -63,22 +67,22 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
     if (applyARResponse.status === 200) {
       // Wait a moment for the system to process
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Get updated count of pending AR requests
       const updatedResponse = await attendance.getPaginatedARPendingRequestDetails(
-        request, 
-        getPaginatedARPendingRequestDetailsExpected.baseRequestBody, 
+        request,
+        getPaginatedARPendingRequestDetailsExpected.baseRequestBody,
         authToken
       );
-      
+
       const updatedCount = updatedResponse.body.totalItems;
       const updatedData = updatedResponse.body.data;
-  
+
       // Verify that the count increased or the new AR entry is present
       expect(updatedCount).toBeGreaterThanOrEqual(initialCount);
-      
+
       // Find the newly applied AR entry
-      const newAREntry = updatedData.find(ar => 
+      const newAREntry = updatedData.find(ar =>
         ar.arCategory === applyARExpected.requestBody.arCategory &&
         ar.days === applyARExpected.requestBody.days &&
         ar.employeeRemark === applyARExpected.requestBody.employeeRemark &&
@@ -99,15 +103,16 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
     const invalidRequestBody = {
       ...getPaginatedARPendingRequestDetailsExpected.baseRequestBody,
       currentPage: -1, // Invalid negative page
-     
+
     };
 
-    const response = await attendance.getPaginatedARNonPendingRequestDetails(
-      request, 
-      invalidRequestBody, 
+    const response = await attendance.getPaginatedARPendingRequestDetails(
+      request,
+      invalidRequestBody,
       authToken
-    );
-    
+      , employeeId,
+      flag);
+
     const responseBody = response.body;
 
     // Should return an error for invalid request
@@ -116,11 +121,12 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
   });
 
   test("Get Paginated AR NONPending(completed) Request Details - Without authentication token @negative ", async ({ request }) => {
-    const response = await attendance.getPaginatedARNonPendingRequestDetails(
-      request, 
-      getPaginatedARPendingRequestDetailsExpected.baseRequestBody
+    const response = await attendance.getPaginatedARPendingRequestDetails(
+      request,
+      getPaginatedARPendingRequestDetailsExpected.baseRequestBody, null, employeeId,
+      flag
     ); // No token passed
-    
+
     const responseBody = response.body;
 
     // Should return an error for missing authentication
@@ -140,12 +146,13 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
         itemPerPage: testCase.itemPerPage
       };
 
-      const response = await attendance.getPaginatedARNonPendingRequestDetails(
-        request, 
-        requestBody, 
-        authToken
+      const response = await attendance.getPaginatedARPendingRequestDetails(
+        request,
+        requestBody,
+        authToken, employeeId,
+        flag
       );
-      
+
       const responseBody = response.body;
 
       expect(response.status).toBe(200);
@@ -156,15 +163,16 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
 
   test("Get Paginated AR NONPending(completed) Request Details - All sorting scenarios  @happy", async ({ request }) => {
     const sortingTestCases = getPaginatedARPendingRequestDetailsExpected.sortingTestCases;
-    
+
     for (const testCase of sortingTestCases) {
-      
-      const response = await attendance.getPaginatedARNonPendingRequestDetails(
-        request, 
-        testCase.payload, 
-        authToken
+
+      const response = await attendance.getPaginatedARPendingRequestDetails(
+        request,
+        testCase.payload,
+        authToken, employeeId,
+        flag
       );
-      
+
       const responseBody = response.body;
 
       expect(response.status).toBe(200);
@@ -172,12 +180,12 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
       expect(responseBody).toHaveProperty("currentPage");
       expect(responseBody).toHaveProperty("totalItems");
       expect(responseBody).toHaveProperty("totalPages");
-      
+
       expect(Array.isArray(responseBody.data)).toBe(true);
       expect(typeof responseBody.currentPage).toBe("number");
       expect(typeof responseBody.totalItems).toBe("number");
       expect(typeof responseBody.totalPages).toBe("number");
-      
+
       // Verify that the response contains the expected structure
       if (responseBody.data.length > 0) {
         const firstItem = responseBody.data[0];
@@ -193,7 +201,7 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
   test("Get Paginated AR NONPending(completed) Request Details - Sort by all fields with ASC and DESC  @happy", async ({ request }) => {
     const sortFields = ["requestOn", "reason", "date", "days", "name", "department", "attendanceDays"];
     const sortDirections = ["ASC", "DESC"];
-    
+
     for (const field of sortFields) {
       for (const direction of sortDirections) {
         const requestBody = {
@@ -201,20 +209,22 @@ test.describe("POST| -/ hrmsApi/attendanceregularizationrequest/getPaginatedARPe
           sortBy: field,
           sortDirection: direction
         };
-        
-        
-        const response = await attendance.getPaginatedARNonPendingRequestDetails(
-          request, 
-          requestBody, 
-          authToken
+
+
+        const response = await attendance.getPaginatedARPendingRequestDetails(
+          request,
+          requestBody,
+          authToken,
+          employeeId,
+          flag
         );
-        
+
         const responseBody = response.body;
 
         expect(response.status).toBe(200);
         expect(responseBody).toHaveProperty("data");
         expect(Array.isArray(responseBody.data)).toBe(true);
-        
+
         // Verify that the response contains the expected structure
         if (responseBody.data.length > 0) {
           const firstItem = responseBody.data[0];

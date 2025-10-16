@@ -4,8 +4,8 @@ import hrmsApi from "../../../../fixtures/Endpoints/commonEndpoint.json" assert 
 import inputsData from "../../../../fixtures/inputs.json" assert { type: "json" };
 
 class Organization {
-  async getFindGradeList(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.findGradeList}`;
+  async getFindGradeList(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.findGradeList}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -31,8 +31,8 @@ class Organization {
       };
     }
   }
-  async getFindGradeListWithoutTanantIdAndUserName(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.findGradeList}`;
+  async getFindGradeListWithoutTanantIdAndUserName(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.findGradeList}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -57,8 +57,8 @@ class Organization {
     }
   }
 
-  async getFindBranchList(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.findBranchList}`;
+  async getFindBranchList(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.findBranchList}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -84,8 +84,8 @@ class Organization {
       };
     }
   }
-  async getFindBranchListWithoutTanantIdAndUserName(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.findBranchList}`;
+  async getFindBranchListWithoutTanantIdAndUserName(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.findBranchList} ${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -110,8 +110,8 @@ class Organization {
       };
     }
   }
-  async getDepartmentList(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.department}`;
+  async getDepartmentList(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.department}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -164,8 +164,8 @@ class Organization {
       };
     }
   }
-  async getDesignationList(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.designation}`;
+  async getDesignationList(request, token,companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.designation}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -192,8 +192,8 @@ class Organization {
     }
   }
 
-  async getDesignationListWithoutTanantIdAndUserName(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.designation}`;
+  async getDesignationListWithoutTanantIdAndUserName(request, token, companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.designation}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -219,8 +219,8 @@ class Organization {
     }
   }
 
-  async getBusinessunitList(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.businessunit}`;
+  async getBusinessunitList(request, token,companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.businessunit}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -247,8 +247,8 @@ class Organization {
     }
   }
 
-  async getBusinessunitListWithoutTanantIdAndUserName(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.businessunit}`;
+  async getBusinessunitListWithoutTanantIdAndUserName(request, token,companyId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.businessunit}${companyId}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -315,7 +315,7 @@ class Organization {
       },
     });
 
-    try { 
+    try {
       const responseBody = await response.json();
       return {
         status: response.status(),

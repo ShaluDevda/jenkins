@@ -6,10 +6,10 @@ import ExpectResponse from "../../utils/endpoints/expect/expectResponse";
 import applyWFHExpected from "../../fixtures/Response/applyWFH.json" assert { type: "json" };
 import getPaginatedWFHExpected from "../../fixtures/Response/getPaginatedWFHExpected.json" assert { type: "json" };
 
-test.describe("Get Paginated WFH Pending Request Details API", () => {
-  let authToken, attendance;
+test.describe("POST| -/workfromhomerequest/getPaginatedWFHPendingRequestDetails/emp/{employeeId}/{flag}, Get Paginated WFH Pending Request Details API", () => {
+  let authToken, attendance, employeeId;
   attendance = new Attandance();
-
+  let flag = "Pending";
   const tryWFHWithDifferentDates = async (
     attendance,
     request,
@@ -54,6 +54,7 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    employeeId = loginResponse.body.employeeId;
   });
 
   test("@happy Get Paginated WFH Pending Request Details - Success scenario", async ({
@@ -62,7 +63,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
     const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
       getPaginatedWFHExpected.baseRequestBody,
-      authToken
+      authToken,
+      employeeId,
+      flag
     );
     const responseBody = response.body;
     "WFH Paginated Response:", responseBody;
@@ -85,7 +88,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
       await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         getPaginatedWFHExpected.baseRequestBody,
-        authToken
+        authToken,
+          employeeId,
+      flag
       );
     const initialCount = initialResponse.body.totalItems;
     // Step 2: Apply WFH
@@ -104,7 +109,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
         await attendance.getPaginatedWFHPendingRequestDetails(
           request,
           getPaginatedWFHExpected.baseRequestBody,
-          authToken
+          authToken,
+            employeeId,
+      flag
         );
       const updatedCount = updatedResponse.body.totalItems;
       const updatedData = updatedResponse.body.data;
@@ -115,7 +122,7 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
       const newWFHEntry = updatedData.find(
         (wfh) =>
           wfh.employeeRemark === applyWFHExpected.requestBody.employeeRemark &&
-          wfh.status === "Pending"
+          wfh.status === "pendi"
       );
 
       expect(newWFHEntry).toBeDefined();
@@ -144,7 +151,7 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
       ...applyWFHExpected.rejectWFHPayload,
       workFromHomeDateWiseId: wfhId,
     };
-    const rejectResponse = await attendance.rejectWFH(
+    const rejectResponse = attendance.rejectWFH(
       request,
       rejectPayload,
       authToken
@@ -157,7 +164,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
       await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         getPaginatedWFHExpected.baseRequestBody,
-        authToken
+        authToken,
+        employeeId,
+        flag
       );
     const updatedData = updatedResponse.body.data;
 
@@ -178,7 +187,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
     const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
       invalidRequestBody,
-      authToken
+      authToken,
+      employeeId,
+      flag
     );
     const responseBody = response.body;
     "WFH Paginated Response:", responseBody;
@@ -193,7 +204,10 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
   }) => {
     const response = await attendance.getPaginatedWFHPendingRequestDetails(
       request,
-      getPaginatedWFHExpected.baseRequestBody
+      getPaginatedWFHExpected.baseRequestBody,
+      null,
+        employeeId,
+      flag
     );
     ExpectResponse.internalServerError(response.status);
   });
@@ -220,7 +234,9 @@ test.describe("Get Paginated WFH Pending Request Details API", () => {
       const response = await attendance.getPaginatedWFHPendingRequestDetails(
         request,
         requestBody,
-        authToken
+        authToken,
+          employeeId,
+      flag
       );
 
       const responseBody = response.body;

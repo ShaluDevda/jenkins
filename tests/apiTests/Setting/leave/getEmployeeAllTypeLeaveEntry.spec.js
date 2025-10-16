@@ -26,7 +26,6 @@ test.describe("POST| /hrmsApi/leaveApply/employeeAllTypeLeaveEntry/emp/{employee
     test("Get EmployeeAllTypeLeaveEntry - Happy flow @happy", async ({ request }) => {
         const leave = new Leave();
         response = await leave.getEmployeeAllTypeLeaveEntry(request, authToken, employeeId, companyId);
-        console.log(response)
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
     });

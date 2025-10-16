@@ -6,7 +6,7 @@ import applyARExpected from "../../fixtures/Response/applyARExpected.json" asser
 import rejectPayload from "../../fixtures/payloads/rejectAndApproveAr.json" assert { type: "json" };
 
 test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Attendance Regularization) API", () => {
-  let authToken,firstResponseBody;
+  let authToken,firstResponseBody,companyId,employeeId,userId, userIdUpdate ;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -49,6 +49,11 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
         ...applyARExpected.requestBody,
         fromDate: isoDate,
         toDate: isoDate,
+        companyId: companyId,
+        employeeId: employeeId,
+        userId:userId, 
+        userIdUpdate:userIdUpdate 
+
       };
       console.log(dynamicPayload)
       response = await attendance.applyAR(request, dynamicPayload, authToken);

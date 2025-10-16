@@ -27,7 +27,6 @@ test.describe("GET| /hrmsApi/leaveRules/{leavePeriodId}, get leaveRules List", (
   test("Get leaveRules - Happy flow @happy ", async ({ request }) => {
 
     response = await leave.leaveRules(request, authToken, leavePeriodId);
-    console.log(response)
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);

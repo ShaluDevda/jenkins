@@ -6,7 +6,7 @@ import loginExpected from "../../fixtures/Response/loginExpected.json" assert { 
 
 
 test.describe("POST| /hrmsApi/branch, Create Branch", () => {
-  let authToken, response;
+  let authToken, response,companyId, userId, userIdUpdate;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,24 +19,60 @@ test.describe("POST| /hrmsApi/branch, Create Branch", () => {
    ExpectResponse.okResponse(loginResponse.status);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
+    userId = loginResponse.body.userId;
+    userIdUpdate = loginResponse.body.userIdUpdate;
   });
 
-  test("Create Branch  - Happy flow @happy ", async ({ request }) => {
-    const payload = {"branchName":"testCompany","addressText":"Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011","pincode":"452011","countryId":"1","stateId":"1","cityId":"2","companyId":1,"address":{"addressText":"Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011","countryId":"1","stateId":"1","cityId":"2","pincode":"452011","userId":2},"activeStatus":"AC","userIdUpdate":2,"userId":2}
+  test("Create Branch - Happy flow @happy", async ({ request }) => {
+    // Step 1: Create a unique branch name to avoid conflicts
+    const uniqueBranchName = `testBranch_${Date.now()}`;
+    const createBranchPayload = { 
+      "branchName": uniqueBranchName, 
+      "addressText": "Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011", 
+      "pincode": "452011", 
+      "countryId": "1", 
+      "stateId": "1", 
+      "cityId": "2", 
+      "companyId": companyId, 
+      "address": { 
+        "addressText": "Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011", 
+        "countryId": "1", 
+        "stateId": "1", 
+        "cityId": "2", 
+        "pincode": "452011", 
+        "userId": userId 
+      }, 
+      "activeStatus": "AC", 
+      "userIdUpdate": userIdUpdate, 
+      "userId": userId 
+    };
+
     const organization = new Organization();
-    response = await organization.createBranch(request, authToken, payload);
+    
+    // Step 2: Create the branch
+    response = await organization.createBranch(request, authToken, createBranchPayload);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
    
-    // Validate after creating branch
-    response = await organization.getFindBranchList(request, authToken);
-
+    // Step 3: Get the branch list to verify the created branch
+    response = await organization.getFindBranchList(request, authToken, companyId);
     expect(response).toBeTruthy();
-ExpectResponse.okResponse(response.status);
-// Verify the created branch name is present in the response
-const branchList = response.body?.data || response.body; // adjust if your API structure differs
-const branchNames = branchList.map(branch => branch.branchName);
-expect(branchNames).toContain(payload.branchName);
+    ExpectResponse.okResponse(response.status);
+    
+    // Step 4: Assert that the branch list contains our newly created branch
+    expect(Array.isArray(response.body)).toBe(true);
+    
+    // Find the created branch in the list
+    const createdBranch = response.body.find(branch => branch.branchName === uniqueBranchName);
+    expect(createdBranch).toBeTruthy();
+    expect(createdBranch.branchName).toBe(uniqueBranchName);
+    expect(createdBranch.activeStatus).toBe("AC");
+    expect(createdBranch.companyId).toBe(parseInt(companyId));
+    
+    // Step 5: Additional assertions to verify branch list contains the created branch name
+    const branchNames = response.body.map(branch => branch.branchName);
+    expect(branchNames).toContain(uniqueBranchName);
    
   });
 

@@ -5,8 +5,8 @@ import { Leave } from "../../../utils/endpoints/classes/settings/leave.js";
 import loginExpected from "../../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("POST| /hrmsApi/holidays/{companyId}, Active Deactive holiday", () => {
-    let authToken, response, holiday, companyId;
-
+    let authToken, response, holiday, companyId,holidaySchemeId, leavePeriodId, getfindAllHolidays;
+  const leave = new Leave();
     test.beforeEach(async ({ request }) => {
         // Login to get authentication token
         const loginPage = new LoginPage();
@@ -20,14 +20,20 @@ test.describe("POST| /hrmsApi/holidays/{companyId}, Active Deactive holiday", ()
         expect(loginResponse.body.token).toBeTruthy();
         authToken = loginResponse.body.token;
          companyId = loginResponse.body.companyId;
+        response = await leave.getLeavePeriodstatus(request, authToken, companyId);
+        leavePeriodId = response.body[0].leavePeriodId;
+        getfindAllHolidays = await leave.findAllHolidays(request, authToken, leavePeriodId);
+        console.log(getfindAllHolidays)
+        holidaySchemeId = getfindAllHolidays.body[0].holidaySchemeId;
     });
 
     test("Active Deactive holiday - Happy flow @happy", async ({ request }) => {
         const leave = new Leave();
         // Get the holiday data
-        holiday = await leave.getfindHolidayByLeavePeroid(request, authToken);
+        holiday = await leave.getfindHolidayByLeavePeroid(request, authToken,leavePeriodId,holidaySchemeId);
+        console.log(holiday)
         const holidaydata = holiday.body[0];
-  console.log('Fetched holiday data:', holidaydata);
+        console.log('Fetched holiday data:', holidaydata);
         // Toggle activeStatus based on current value
         let newStatus = holidaydata.activeStatus === 'AC' ? 'DE' : 'AC';
         const payload = {
@@ -38,6 +44,7 @@ test.describe("POST| /hrmsApi/holidays/{companyId}, Active Deactive holiday", ()
         };
         console.log('Toggling activeStatus from', holidaydata.activeStatus, 'to', newStatus);
         response = await leave.activeDeactiveHoliday(request, authToken, payload, companyId);
+        console.log('Fetched holiday data:', response);
         ExpectResponse.okResponse(response.status);
     });
 });

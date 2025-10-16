@@ -6,8 +6,8 @@ import { Organization } from "../../utils/endpoints/classes/settings/Organizatio
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 
-test.describe("GET| /hrmsApi/grade/findGradeList/1, get find grade List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/grade/findGradeList/{companyId}, get find grade List", () => {
+  let authToken, response,companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -21,11 +21,12 @@ test.describe("GET| /hrmsApi/grade/findGradeList/1, get find grade List", () => 
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
   test("Get Branch list - Happy flow @happy", async ({ request }) => {
     const organization = new Organization();
-    response = await organization.getFindGradeList(request, authToken);
+    response = await organization.getFindGradeList(request, authToken, companyId);
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);
@@ -52,7 +53,7 @@ test.describe("GET| /hrmsApi/grade/findGradeList/1, get find grade List", () => 
 
    test("Get Grade list without tenantId - @negative", async ({ request }) => {
     const organization = new Organization();
-    response = await organization.getFindGradeListWithoutTanantIdAndUserName(request, authToken);
+    response = await organization.getFindGradeListWithoutTanantIdAndUserName(request, authToken,companyId);
     ExpectResponse.invalidAccess(response.body.message);
     // Validate each designation object
    ExpectResponse.forbiddenRequest(response.status);

@@ -41,7 +41,6 @@ test.describe("POST| /hrmsApi/leaveScheme, Create leave scheme", () => {
         }
         const leave = new Leave();
         response = await leave.createLeaveScheme(request, authToken, payload);
-        console.log("create", response)
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
         expect(response.body).toEqual(expect.objectContaining({

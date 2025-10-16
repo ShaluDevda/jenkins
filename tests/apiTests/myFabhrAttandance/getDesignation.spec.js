@@ -6,7 +6,7 @@ import { extractDesignationNames } from "../../utils/endpoints/classes/general/c
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("Time & Attendance>Attendance get designation", () => {
-  let authToken;
+  let authToken, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -20,11 +20,12 @@ test.describe("Time & Attendance>Attendance get designation", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
   test("GET designation - Happy flow @happy   ", async ({ request }) => {
     const attendance = new Attandance();
-    const response = await attendance.getDesignation(request, authToken);
+    const response = await attendance.getDesignation(request, authToken,companyId);
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
     expect(Array.isArray(response.body)).toBe(true);

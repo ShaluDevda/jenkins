@@ -6,8 +6,8 @@ import { Organization } from "../../utils/endpoints/classes/settings/Organizatio
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 
-test.describe("GET| /hrmsApi/department/active/1, get find grade List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/department/active/{companyId}, get find grade List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -21,11 +21,12 @@ test.describe("GET| /hrmsApi/department/active/1, get find grade List", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId
   });
 
   test("Get department list - Happy flow @happy", async ({ request }) => {
     const organization = new Organization();
-    response = await organization.getDepartmentList(request, authToken);
+    response = await organization.getDepartmentList(request, authToken,companyId);
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);

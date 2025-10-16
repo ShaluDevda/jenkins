@@ -11,7 +11,7 @@ import {
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("POST| getMarkBulkAttentancPagination API", () => {
-  let authToken;
+  let authToken, companyId;
 
   test.beforeEach(async ({ request }) => {
     const loginPage = new LoginPage();
@@ -23,6 +23,7 @@ test.describe("POST| getMarkBulkAttentancPagination API", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
 
   test("POST | Get mark bulk attandance data pagination- Happy flow @happy   ", async ({
@@ -68,7 +69,8 @@ test.describe("POST| getMarkBulkAttentancPagination API", () => {
     // Fetch designations
     const designationRes = await organization.getDesignationList(
       request,
-      authToken
+      authToken,
+      companyId
     );
     expect(designationRes.status).toBe(200);
     const designationListObj = extractDesignationList(designationRes.body).map(
@@ -76,7 +78,7 @@ test.describe("POST| getMarkBulkAttentancPagination API", () => {
     );
 
     // Fetch grades
-    const gradeRes = await organization.getFindGradeList(request, authToken);
+    const gradeRes = await organization.getFindGradeList(request, authToken, companyId);
     expect(gradeRes.status).toBe(200);
     const activeGrdeListObj = extractGradeList(gradeRes.body).map(
       (gr) => gr.employeeCode

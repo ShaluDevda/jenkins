@@ -6,7 +6,7 @@ import loginExpected from "../../fixtures/Response/loginExpected.json" assert { 
 
 
 test.describe("DELETE| /hrmsApi/branch/delete/{branchId}, Delete Branch", () => {
-    let authToken, response;
+    let authToken, response,companyId;
 
     test.beforeEach(async ({ request }) => {
         // Login to get authentication token
@@ -19,16 +19,17 @@ test.describe("DELETE| /hrmsApi/branch/delete/{branchId}, Delete Branch", () => 
         ExpectResponse.okResponse(loginResponse.status);
         expect(loginResponse.body.token).toBeTruthy();
         authToken = loginResponse.body.token;
+        companyId = loginResponse.body.companyId;
     });
 
     test("Delete Branch  - Happy flow @happy", async ({ request }) => {
         const organization = new Organization();
-        response = await organization.getFindBranchList(request, authToken);
+        response = await organization.getFindBranchList(request, authToken,companyId);
         if (response.body.message == 'Branch data not present') {
             const payload = { "branchName": "testCompany", "addressText": "Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011", "pincode": "452011", "countryId": "1", "stateId": "1", "cityId": "2", "companyId": 1, "address": { "addressText": "Plot no. 91, Ratna Lok Colony,near medanta hospital, Indore, Madhya Pradesh 452011", "countryId": "1", "stateId": "1", "cityId": "2", "pincode": "452011", "userId": 2 }, "activeStatus": "AC", "userIdUpdate": 2, "userId": 2 }
             response = await organization.createBranch(request, authToken, payload);
             ExpectResponse.okResponse(response.status);
-            response = await organization.getFindBranchList(request, authToken);
+            response = await organization.getFindBranchList(request, authToken,companyId);
             expect(response).toBeTruthy();
         }
 
@@ -40,7 +41,7 @@ test.describe("DELETE| /hrmsApi/branch/delete/{branchId}, Delete Branch", () => 
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
         // After delete, validate the branch is not in the list
-        response = await organization.getFindBranchList(request, authToken);
+        response = await organization.getFindBranchList(request, authToken,companyId);
         // Check that the deleted branch name is not present
         const branchList = response.body;
         // If no branch data after deletion, validate response structure

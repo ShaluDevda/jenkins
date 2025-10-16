@@ -6,8 +6,8 @@ import { Organization } from "../../utils/endpoints/classes/settings/Organizatio
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 
-test.describe("GET| /hrmsApi/branch/findAll/1, get find branch List", () => {
-  let authToken, response;
+test.describe("GET| /hrmsApi/branch/findAll/{companyId}, get find branch List", () => {
+  let authToken, response, companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -21,11 +21,12 @@ test.describe("GET| /hrmsApi/branch/findAll/1, get find branch List", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId
   });
 
   test("Get branch list - Happy flow @happy", async ({ request }) => {
     const organization = new Organization();
-    response = await organization.getFindBranchList(request, authToken);
+    response = await organization.getFindBranchList(request, authToken, companyId);
     expect(response).toBeTruthy();
 
 
@@ -68,11 +69,9 @@ test.describe("GET| /hrmsApi/branch/findAll/1, get find branch List", () => {
 
   test("Get branch list without tenantId - @negative", async ({ request }) => {
     const organization = new Organization();
-    response = await organization.getFindBranchListWithoutTanantIdAndUserName(request, authToken);
+    response = await organization.getFindBranchListWithoutTanantIdAndUserName(request, authToken, companyId);
     ExpectResponse.invalidAccess(response.body.message);
     // Validate each designation object
     ExpectResponse.forbiddenRequest(response.status);
-
   });
-
 });

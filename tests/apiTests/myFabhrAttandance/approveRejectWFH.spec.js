@@ -5,9 +5,10 @@ import loginExpected from "../../fixtures/Response/loginExpected.json" assert { 
 import applyWFHExpected from "../../fixtures/Response/applyWFH.json" assert { type: "json" };
 
 
-test.describe.skip("Reject and Approve WFH API", () => {
+test.describe("Reject and Approve WFH API", () => {
   let authToken;
-  let createdWFHIds = []; // Track WFH IDs created during tests
+  // Declare user/company variables explicitly (avoid implicit globals)
+  let userId, userIdUpdate, companyId, employeeId;
   
   // Helper function to try WFH with different dates until success
   const tryWFHWithDifferentDates = async (attendance, request, basePayload, maxAttempts = 90) => {
@@ -17,6 +18,10 @@ test.describe.skip("Reject and Approve WFH API", () => {
       
       const payload = {
         ...basePayload,
+        employeeId: employeeId,
+        companyId:companyId,
+        userId: userId,
+        userIdUpdate:userIdUpdate,
         fromDate: testDate.toISOString(),
         toDate: testDate.toISOString()
       };
@@ -46,6 +51,10 @@ test.describe.skip("Reject and Approve WFH API", () => {
       expect(loginResponse.status).toBe(200);
       expect(loginResponse.body.token).toBeTruthy();
       authToken = loginResponse.body.token;
+      userIdUpdate = loginResponse.body.userIdUpdate;
+      companyId = loginResponse.body.companyId;
+      employeeId = loginResponse.body.employeeId;
+      userId = loginResponse.body.userId;
     });
 
   // Happy Path 
@@ -109,7 +118,7 @@ test.describe.skip("Reject and Approve WFH API", () => {
       employeeRemark: applyResult.payload.employeeRemark
     };
 
-    const rejectResponse = await attendance.rejectWFH(request, approvePayload, authToken);
+    const rejectResponse =  attendance.rejectWFH(request, approvePayload, authToken);
     expect(rejectResponse.status).toBe(200);
     expect(rejectResponse.body).toBeTruthy();
 
@@ -126,7 +135,7 @@ test.describe.skip("Reject and Approve WFH API", () => {
       workFromHomeDateWiseId: 999999 // Invalid WFH ID
     };
 
-    const response = await attendance.rejectWFH(request, invalidRejectPayload, authToken);
+    const response =  attendance.rejectWFH(request, invalidRejectPayload, authToken);
 
     // Should return error for invalid WFH ID
     expect(response).toBeTruthy();
@@ -153,7 +162,7 @@ test.describe.skip("Reject and Approve WFH API", () => {
       // Missing other required fields
     };
 
-    const response = await attendance.rejectWFH(request, incompleteRejectPayload, authToken);
+    const response =  attendance.rejectWFH(request, incompleteRejectPayload, authToken);
 
     // Should return error for missing required fields
     expect(response).toBeTruthy();
@@ -178,7 +187,7 @@ test.describe.skip("Reject and Approve WFH API", () => {
     const rejectPayload = applyWFHExpected.rejectWFHPayload;
 
     const startTime = Date.now();
-    const response = await attendance.rejectWFH(request, rejectPayload, authToken);
+    const response =  attendance.rejectWFH(request, rejectPayload, authToken);
     const endTime = Date.now();
     const responseTime = endTime - startTime;
 
@@ -205,7 +214,7 @@ test.describe.skip("Reject and Approve WFH API", () => {
         workFromHomeDateWiseId: 61 + rejectionReasons.indexOf(reason) // Different IDs to avoid conflicts
       };
 
-      const response = await attendance.rejectWFH(request, rejectPayload, authToken);
+  const response =  attendance.rejectWFH(request, rejectPayload, authToken);
       
       // Should accept different rejection reasons
       expect(response.status).toBe(200);

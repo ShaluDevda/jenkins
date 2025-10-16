@@ -58,6 +58,7 @@ class Leave {
       };
     }
   }
+
   async getLeavePeriod(request, token, companyId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.getLeavePeriod}${companyId}`;
 
@@ -97,6 +98,34 @@ class Leave {
         username: inputsData.username,
       },
 
+    });
+
+    try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
+
+  async findAllHolydays(request, token, leavePeriodId) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.findAllHolydays}${leavePeriodId}`;
+    const response = await request.get(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
     });
 
     try {
@@ -232,8 +261,8 @@ class Leave {
   }
 
 
-  async getHolidays(request, token) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.getHolodays}`;
+  async getHolidays(request, token, holidayID) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.getHolodays}${holidayID}`;
     const response = await request.get(url, {
       method: "GET",
       headers: {
@@ -401,33 +430,6 @@ class Leave {
     }
   }
 
-  async holidaySchemesByLeavePeriod(request, token, leavePeriodId) {
-    const url = `${hrmsApi.hrmsApi}${endpoints.holidaySchemesByLeavePeriod}${leavePeriodId}`;
-    const response = await request.get(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": inputsData.ContentType,
-        Authorization: `Bearer ${token}`,
-        tenantId: inputsData.tenantId,
-        username: inputsData.username,
-      },
-    });
-
-    try {
-      const responseBody = await response.json();
-      return {
-        status: response.status(),
-        body: responseBody,
-      };
-    } catch (error) {
-      const responseText = await response.text();
-      return {
-        status: response.status(),
-        body: responseText || {},
-        error: error.message,
-      };
-    }
-  }
 
   async getLeaveTypeFindByLeavePeroid(request, token, leavePeriodId, leaveSchemeId) {
     const url = `${hrmsApi.hrmsApi}${endpoints.getLeaveTypeFindByLeavePeroid}${leavePeriodId}${"/"}${leaveSchemeId}`;

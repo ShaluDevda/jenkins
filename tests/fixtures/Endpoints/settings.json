@@ -4,15 +4,15 @@
   "leaveTypeMaster": "/leaveTypeMaster/",
   "getLeavePeriod": "/leavePeriod/",
   "getLeavePendingCountOfCurrentSession": "/leaveApply/getLeavePendingCountOfCurrentSession/",
+  "findAllHolydays":"/holidays/findAllHolydays/",
   "findAllHolidays":"/holidays/findAllHoliday/",
   "leaveRules":"/leaveRules/",
   "leaveScheme":"/leaveScheme",
   "getEmployeInfo":"/employee/employeeInfo/emp/",
-  "getHolodays":"/holidays/hloiday/253",
+  "getHolodays":"/holidays/hloiday/",
   "findHolidayByLeavePeroid":"/holidays/findHolidayByLeavePeroid/",
   "holidays":"/holidays/",
   "getEmployeeAllTypeLeaveEntry":"/leaveApply/employeeAllTypeLeaveEntry/emp/",
-  "holidaySchemesByLeavePeriod":"/holidayScheme/findAllHoliday/",
   "getLeaveTypeFindByLeavePeroid":"/leaveType/findByLeavePeroid/",
   "getEmployeeLeaveBalanceSummryList":"/leaveApply/leaveBalance/emp/"
 }

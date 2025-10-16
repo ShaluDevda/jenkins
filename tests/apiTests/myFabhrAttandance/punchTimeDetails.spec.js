@@ -4,34 +4,36 @@ import { PunchTime } from "../../utils/endpoints/classes/Attandance/punchTime";
 import ExpectResponse from "../../utils/endpoints/expect/expectResponse";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
-test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Details GET API", () => {
-  let token, loginPage;
+test.describe("GET| - hrmsApi/punchTime/{employeeCode}/{companyId} Punch Time Details GET API", () => {
+  let token, loginPage, validCompanyId, validEmployeeCode;
   const loginBody = {
     username: loginExpected.happy.loginName,
-       password: loginExpected.happy.password,
+    password: loginExpected.happy.password,
   };
 
   // Test data
-  const validEmployeeCode = loginExpected.happy.loginName;
-  const validCompanyId = 1;
   const invalidCompanyId = 999;
 
   test.beforeEach("Get authentication token", async ({ request }) => {
-     loginPage = new LoginPage();
+    loginPage = new LoginPage();
     const loginResp = await loginPage.loginAs(request, loginBody);
+    console.log(loginResp)
     token = loginResp.body.token;
+    validEmployeeCode = loginResp.body.loginName;
+    validCompanyId = loginResp.body.companyId;
     expect(token).toBeTruthy();
   });
 
-  test("Get punch time details - Happy flow  @happy   ", async ({ request }) => {
+  test.only("Get punch time details - Happy flow  @happy   ", async ({ request }) => {
     const punchTime = new PunchTime();
 
-    const response = await punchTime.getPunchTimeDetails(
+    const response = punchTime.getPunchTimeDetails(
       request,
       token,
       validEmployeeCode,
       validCompanyId
     );
+    
     // Basic response validation
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
@@ -74,7 +76,7 @@ test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Detai
   }) => {
     const punchTime = new PunchTime();
 
-    const response = await punchTime.getPunchTimeDetailsWithoutUsername(
+    const response = punchTime.getPunchTimeDetailsWithoutUsername(
       request,
       token,
       validEmployeeCode,
@@ -101,7 +103,7 @@ test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Detai
   test("Get punch time details - Invalid company ID @negative   ", async ({ request }) => {
     const punchTime = new PunchTime();
 
-    const response = await punchTime.getPunchTimeDetailsWithInvalidCompany(
+    const response = punchTime.getPunchTimeDetailsWithInvalidCompany(
       request,
       token,
       validEmployeeCode,
@@ -141,7 +143,7 @@ test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Detai
     const punchTime = new PunchTime();
 
     const startTime = Date.now();
-    const response = await punchTime.getPunchTimeDetails(
+    const response = punchTime.getPunchTimeDetails(
       request,
       token,
       validEmployeeCode,
@@ -164,7 +166,7 @@ test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Detai
   }) => {
     const punchTime = new PunchTime();
 
-    const response = await punchTime.getPunchTimeDetails(
+    const response = punchTime.getPunchTimeDetails(
       request,
       token,
       validEmployeeCode,
@@ -173,7 +175,7 @@ test.describe("GET| - hrmsApi/punchTime/FABHR-72-fabhrdemo.in/1 Punch Time Detai
 
     // Validate response
     expect(response).toBeTruthy();
-   ExpectResponse.okResponse(response.status);
+    ExpectResponse.okResponse(response.status);
     expect(response.body).toBeTruthy();
 
     // Validate that response body is an object (JSON)

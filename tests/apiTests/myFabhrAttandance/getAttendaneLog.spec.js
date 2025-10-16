@@ -5,7 +5,7 @@ import loginExpected from "../../fixtures/Response/loginExpected.json" assert { 
 import getAttandanceLog from "../../fixtures/payloads/getAttandanceLog.json" assert { type: "json" };
 let response;
 test.describe("Time & Attendance>Attendance get Attendane Log", () => {
-  let authToken;
+  let authToken,companyId;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -19,13 +19,17 @@ test.describe("Time & Attendance>Attendance get Attendane Log", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
+    companyId = loginResponse.body.companyId;
   });
   test("POST get Attendane Log - Happy flow @happy ", async ({ request }) => {
     const attendance = new Attandance();
-
+    const payload ={
+      ...getAttandanceLog.getAttandanceLogPayload,
+      companyId: companyId
+    }
     response = await attendance.getAttendaneLog(
       request,
-      getAttandanceLog.getAttandanceLogPayload,
+      payload,
       authToken
     );
     const responseBody = response.body;

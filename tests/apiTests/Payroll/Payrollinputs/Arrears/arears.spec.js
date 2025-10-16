@@ -14,7 +14,7 @@ test.describe("GET| arear/{companyId}, View arears", () => {
     const loginPage = new LoginPage();
     const loginBody = {
       username: loginExpected.happy.loginName,
-         password: loginExpected.happy.password,
+      password: loginExpected.happy.password,
     };
     const loginResponse = await loginPage.loginAs(request, loginBody);
 
@@ -22,58 +22,59 @@ test.describe("GET| arear/{companyId}, View arears", () => {
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
     companyId = loginResponse.body.companyId;
-    
+
   });
 
   test("View arears - Happy flow @happy", async ({ request }) => {
-     arrears = new Arears();
+    arrears = new Arears();
     response = await arrears.arear(request, authToken, companyId);
-    console.log(response);
+    ;
     expect(response).toBeTruthy();
-    expect(response.status).toBe(200);
+    ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
 
     // Validate each designation object
-      const ids = new Set();
-      for (const item of response.body) {
-        expect(item).toHaveProperty("arearCalculationId");
-        expect(item).toHaveProperty("actualAmount");
-        expect(item).toHaveProperty("companyId");
-        expect(item).toHaveProperty("dateCreated");
-        expect(item).toHaveProperty("dateUpdated");
-        expect(item).toHaveProperty("netPayableAmount");
-        expect(item).toHaveProperty("payrollMonth");
-        expect(item).toHaveProperty("pfDeduction");
-        expect(item).toHaveProperty("employeeId");
-        expect(item).toHaveProperty("userId");
-        expect(item).toHaveProperty("isBooked");
-        expect(item).toHaveProperty("userIdUpdate");
-        expect(item).toHaveProperty("arearId");
-        expect(item).toHaveProperty("arearFrom");
-        expect(item).toHaveProperty("esiDeduction");
-        expect(item).toHaveProperty("employeeCode");
-        expect(item).toHaveProperty("empName");
-        expect(item).toHaveProperty("departmentName");
-        expect(item).toHaveProperty("deductionAmt");
-        expect(item).toHaveProperty("arearTo");
-        expect(item).toHaveProperty("dateOfJoining");
-        expect(item).toHaveProperty("designationName");
-        expect(item).toHaveProperty("gradesName");
-        expect(item).toHaveProperty("basicSalary");
-        expect(item).toHaveProperty("specialAllowance");
-        expect(item).toHaveProperty("employeeLogoPath");
-        expect(item).toHaveProperty("ptDeduction");
-      }
+    const ids = new Set();
+    for (const item of response.body) {
+      expect(item).toHaveProperty("arearCalculationId");
+      expect(item).toHaveProperty("actualAmount");
+      expect(item).toHaveProperty("companyId");
+      expect(item).toHaveProperty("dateCreated");
+      expect(item).toHaveProperty("dateUpdated");
+      expect(item).toHaveProperty("netPayableAmount");
+      expect(item).toHaveProperty("payrollMonth");
+      expect(item).toHaveProperty("pfDeduction");
+      expect(item).toHaveProperty("employeeId");
+      expect(item).toHaveProperty("userId");
+      expect(item).toHaveProperty("isBooked");
+      expect(item).toHaveProperty("userIdUpdate");
+      expect(item).toHaveProperty("arearId");
+      expect(item).toHaveProperty("arearFrom");
+      expect(item).toHaveProperty("esiDeduction");
+      expect(item).toHaveProperty("employeeCode");
+      expect(item).toHaveProperty("empName");
+      expect(item).toHaveProperty("departmentName");
+      expect(item).toHaveProperty("deductionAmt");
+      expect(item).toHaveProperty("arearTo");
+      expect(item).toHaveProperty("dateOfJoining");
+      expect(item).toHaveProperty("designationName");
+      expect(item).toHaveProperty("gradesName");
+      expect(item).toHaveProperty("basicSalary");
+      expect(item).toHaveProperty("specialAllowance");
+      expect(item).toHaveProperty("employeeLogoPath");
+      expect(item).toHaveProperty("ptDeduction");
+    }
 
-      const gradeList = extractGradeList(response.body);
-    
+    const gradeList = extractGradeList(response.body);
+
   });
 
-   test("Get Grade list without companyId - @negative", async ({ request }) => {
+  test("Get Grade list without companyId - @negative", async ({ request }) => {
     arrears = new Arears();
     response = await arrears.arear(request, authToken);
+    console.log(response);
+    ExpectResponse.internalServerError(response.status);
     ExpectResponse.serverNotResponding(response.body.message);
-   
   });
 
 });

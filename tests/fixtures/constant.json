@@ -3,5 +3,6 @@
   "inCorrectUsername": "You have entered incorrect username.",
   "fieldRequired": "This field is required.",
   "badRequest": "Bad Request",
-  "successfullyDataFound":"Data Found Successfully"
+  "successfullyDataFound":"Data Found Successfully",
+  "serverNotResponding":"Server Not Responding"
 }

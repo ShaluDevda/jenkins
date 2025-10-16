@@ -28,7 +28,6 @@ test.describe("POST| /hrmsApi/holidays/findHolidayByLeavePeroid/{leavePeriodId}/
 
     test("Create leave scheme - Happy flow @happy", async ({ request }) => {
         response = await leave.getfindHolidayByLeavePeroid(request, authToken, leavePeriodId, holidaySchemeId);
-        console.log(response)
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
         // ensure the response array contains at least one object with the required keys (values ignored, null allowed)
