@@ -28,7 +28,6 @@ const leave = new Leave();
 
   test("get Leave Type FindBy LeavePeroid - Happy flow @happy", async ({ request }) => {
     response = await leave.getLeaveTypeFindByLeavePeroid(request, authToken, leavePeriodId,leaveSchemeId);
-      console.log(response)
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
   });

@@ -1,5 +1,6 @@
 import endpoints from "../../../../fixtures/Endpoints/commonEndpoint.json" assert { type: "json" };
 import attandanceEndpoints from "../../../../fixtures/Endpoints/Attandance.json" assert { type: "json" };
+
 import inputsData from "../../../../fixtures/inputs.json" assert { type: "json" };
 
 let responseBody;
@@ -56,8 +57,8 @@ class Attandance {
     // Merge with any additional data (this will override the base payload if same keys exist)
     return { ...basePayload, ...additionalData };
   }
-  async getAllCheckinDetails(request, token, employeeId) {
-    const response = await request.get(endpoints.hrmsApi + attandanceEndpoints.getAllCheckinData + employeeId, {
+  async getAllCheckinDetails(request, token) {
+    const response = await request.get(endpoints.hrmsApi+attandanceEndpoints.getAllCheckinData, {
       method: "GET",
       headers: {
         "Content-Type": inputsData.ContentType,

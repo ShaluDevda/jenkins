@@ -28,7 +28,6 @@ test.describe("POST| -/hrmsApi/workfromhomerequest, Apply WFH API", () => {
 
     // Helpful debug message so test runners show how many attempts will be made
     // (can be overridden via MAX_WFH_ATTEMPTS env var)
-    console.log(`tryWFHWithDifferentDates: maxAttempts=${maxAttempts}`);
 
     for (let i = 0; i < maxAttempts; i++) {
       const testDate = new Date();

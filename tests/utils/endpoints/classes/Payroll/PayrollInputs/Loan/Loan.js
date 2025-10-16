@@ -61,6 +61,64 @@ class Loan {
       };
     }
   }
+
+  async getLoanIssueSearchListWithPagination(request, token, payload) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.getLoanIssueSearchListWithPagination}`;
+    const response = await request.post(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
+      data: payload,
+    });
+
+     try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
+
+  async loanIssueId(request, token, transactionNo) {
+    const url = `${hrmsApi.hrmsApi}${endpoints.loanIssueId}${transactionNo}`;
+    const response = await request.get(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": inputsData.ContentType,
+        Authorization: `Bearer ${token}`,
+        tenantId: inputsData.tenantId,
+        username: inputsData.username,
+      },
+    });
+
+    try {
+      const responseBody = await response.json();
+      return {
+        status: response.status(),
+        body: responseBody,
+      };
+    } catch (error) {
+      const responseText = await response.text();
+      return {
+        status: response.status(),
+        body: responseText || {},
+        error: error.message,
+      };
+    }
+  }
+  
 }
 
 export { Loan };

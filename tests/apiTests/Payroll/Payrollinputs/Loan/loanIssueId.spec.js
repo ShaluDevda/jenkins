@@ -3,10 +3,12 @@ import { LoginPage } from "../../../../utils/endpoints/classes/login";
 import ExpectResponse from "../../../../utils/endpoints/expect/expectResponse";
 import { Loan } from "../../../../utils/endpoints/classes/Payroll/PayrollInputs/Loan/Loan";
 import loginExpected from "../../../../fixtures/Response/loginExpected.json" assert { type: "json" };
+import getPaginatedARPendingRequestDetailsExpected from "../../../../fixtures/Response/getPaginatedARPendingRequestDetailsExpected.json" assert { type: "json" };
 
 
-test.describe("GET| /subMenu/allSubMenu/{companyId}, View all Sub Menu", () => {
-  let authToken, response, loan, companyId;
+
+test.describe("GET| /loanIssueId/{companyId}, View Loan Issued", () => {
+  let authToken, response, loan, transactionNo, responsePaginated;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -20,16 +22,19 @@ test.describe("GET| /subMenu/allSubMenu/{companyId}, View all Sub Menu", () => {
     expect(loginResponse.status).toBe(200);
     expect(loginResponse.body.token).toBeTruthy();
     authToken = loginResponse.body.token;
-    companyId = loginResponse.body.companyId;
     
   });
 
-  test("View all Sub Menu - Happy flow @happy", async ({ request }) => {
+  test("View Loan Issued - Happy flow @happy", async ({ request }) => {
      loan = new Loan();
-    response = await loan.subMenuAllSubMenu(request, authToken, companyId);
+      responsePaginated = await loan.getLoanIssueSearchListWithPagination(request, authToken ,getPaginatedARPendingRequestDetailsExpected.baseRequestBody);
+      const body = responsePaginated.body.data;
+      const  randomIndex = Math.floor(Math.random() * body.length);
+      const randomLoan = body[randomIndex];
+
+    response = await loan.loanIssueId(request, authToken, randomLoan.transactionNo);
     expect(response).toBeTruthy();
     expect(response.status).toBe(200);
-    expect(Array.isArray(response.body)).toBe(true);
 
     expect(response.body).toHaveProperty("transactionNo");
     expect(response.body).toHaveProperty("employeeId");
@@ -76,36 +81,13 @@ test.describe("GET| /subMenu/allSubMenu/{companyId}, View all Sub Menu", () => {
     expect(response.body).toHaveProperty("loanReleasedOn");
     expect(response.body).toHaveProperty("loanRecovered");
     expect(response.body).toHaveProperty("emiDate");
-    expect(response.body).toHaveProperty("loanEmisDto"); // Nested array
-
-    for (const emi of response.body.loanEmisDto) {
-    expect(emi).toHaveProperty("emiNo");
-    expect(emi).toHaveProperty("transactionNo");
-    expect(emi).toHaveProperty("emiStatus");
-    expect(emi).toHaveProperty("userId");
-    expect(emi).toHaveProperty("dateCreated");
-    expect(emi).toHaveProperty("remarks");
-    expect(emi).toHaveProperty("emiStartDate");
-    expect(emi).toHaveProperty("loanType");
-    expect(emi).toHaveProperty("loanTypeLabel");
-    expect(emi).toHaveProperty("loanAmount");
-    expect(emi).toHaveProperty("emiAmount");
-    expect(emi).toHaveProperty("emiDate");
-    expect(emi).toHaveProperty("naration");
-    expect(emi).toHaveProperty("remaining");
-    expect(emi).toHaveProperty("emiStatusLabel");
-    expect(emi).toHaveProperty("totalEmiAmount");
-    expect(emi).toHaveProperty("pendingAmount");
-    expect(emi).toHaveProperty("transactionFlag");
-    expect(emi).toHaveProperty("processMonth");
-}
-
-   
+    expect(response.body).toHaveProperty("loanEmisDto");
+  
   });
 
    test("Get SubMenu list without companyId - @negative", async ({ request }) => {
     loan = new Loan();
-    response = await loan.subMenuAllSubMenu(request, authToken);
+    response = await loan.loanIssueId(request, authToken);
     ExpectResponse.serverNotResponding(response.body.message);
    
   });

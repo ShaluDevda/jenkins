@@ -28,7 +28,7 @@ test.describe("GET| arear/{companyId}, View arears", () => {
   test("View arears - Happy flow @happy", async ({ request }) => {
     arrears = new Arears();
     response = await arrears.arear(request, authToken, companyId);
-    ;
+    
     expect(response).toBeTruthy();
     ExpectResponse.okResponse(response.status);
     expect(Array.isArray(response.body)).toBe(true);
@@ -72,7 +72,6 @@ test.describe("GET| arear/{companyId}, View arears", () => {
   test("Get Grade list without companyId - @negative", async ({ request }) => {
     arrears = new Arears();
     response = await arrears.arear(request, authToken);
-    console.log(response);
     ExpectResponse.internalServerError(response.status);
     ExpectResponse.serverNotResponding(response.body.message);
   });

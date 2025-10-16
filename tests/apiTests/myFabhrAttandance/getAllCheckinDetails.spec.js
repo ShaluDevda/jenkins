@@ -6,28 +6,43 @@ import ExpectResponse from "../../utils/endpoints/expect/expectResponse";
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("Get All Checkin Detail", () => {
+<<<<<<< HEAD
   let token, employeeId, userName;
+=======
+  let token,employeeId;
+>>>>>>> ParthMantri
   const loginBody = {
     username: loginExpected.happy.loginName,
     password: loginExpected.happy.password,
   };
 
+<<<<<<< HEAD
   test.beforeEach("GET |-/hrmsApi/attendanceLog/getAllCheckInDetails/emp/{employeeId}  Get authentication token", async ({ request }) => {
+=======
+  test.beforeEach("GET |-hrmsApi/attendanceLog/getAllCheckInDetails/emp/{employeeId}  Get authentication token", async ({ request }) => {
+>>>>>>> ParthMantri
     const loginPage = new LoginPage();
     const loginResp = await loginPage.loginAs(request, loginBody);
     token = loginResp.body.token;
     employeeId = loginResp.body.employeeId;
+<<<<<<< HEAD
     userName = loginResp.body.userName;
+=======
+>>>>>>> ParthMantri
     expect(token).toBeTruthy();
   });
 
   test("Get all checkin data @happy", async ({ request }) => {
     const getAllCheckinDetails = new Attandance();
+<<<<<<< HEAD
     const response = await getAllCheckinDetails.getAllCheckinDetails(
       request,
       token,
       employeeId
     );
+=======
+    const response = await getAllCheckinDetails.getAllCheckinDetails(request, token, employeeId);
+>>>>>>> ParthMantri
 
 
     // Basic response validation
@@ -80,7 +95,11 @@ test.describe("Get All Checkin Detail", () => {
       await getAllCheckinDetails.getAllCheckinDetailsWithoutUsername(
         request,
         token,
+<<<<<<< HEAD
         employeeId
+=======
+        companyId
+>>>>>>> ParthMantri
       );
 
     // Validate error response structure

@@ -26,7 +26,6 @@ test.describe("GET| /hrmsApi/leaveApply/leaveBalance/emp/{employeeId}/{companyId
     test("Fetch employee leave balance summary - Happy flow @happy", async ({ request }) => {
         const leave = new Leave();
         response = await leave.getEmployeeLeaveBalanceSummryList(request, authToken, employeeId, companyId);
-        console.log(response)
         expect(response).toBeTruthy();
         ExpectResponse.okResponse(response.status);
     });

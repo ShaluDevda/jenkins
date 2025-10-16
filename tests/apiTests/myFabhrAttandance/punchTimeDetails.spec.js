@@ -24,7 +24,7 @@ test.describe("GET| - hrmsApi/punchTime/{employeeCode}/{companyId} Punch Time De
     expect(token).toBeTruthy();
   });
 
-  test.only("Get punch time details - Happy flow  @happy   ", async ({ request }) => {
+  test("Get punch time details - Happy flow  @happy   ", async ({ request }) => {
     const punchTime = new PunchTime();
 
     const response = punchTime.getPunchTimeDetails(

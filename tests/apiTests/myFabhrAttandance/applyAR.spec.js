@@ -6,7 +6,11 @@ import applyARExpected from "../../fixtures/Response/applyARExpected.json" asser
 import rejectPayload from "../../fixtures/payloads/rejectAndApproveAr.json" assert { type: "json" };
 
 test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Attendance Regularization) API", () => {
+<<<<<<< HEAD
   let authToken,firstResponseBody,companyId,employeeId,userId, userIdUpdate ;
+=======
+  let authToken,firstResponseBody;
+>>>>>>> ParthMantri
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
