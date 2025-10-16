@@ -1,2 +1,0 @@
-/hrmsApi/leaveApply/leaveWiseRatio/emp/1/1
-[{"label":"Balance","value":"11.00","color":"#9ba7ed"},{"label":"Consumed","value":"0.00","color":"#575bde"}]

@@ -3,5 +3,7 @@
     "/arear/saveData":"/arear/saveData/secure",
     "subMenuAllSubMenu":"/subMenu/allSubMenu/",
     "loanIssue":"/loanIssue",
-    "empPFContributionInfo":"/empPFContributionInfo/"
+    "empPFContributionInfo":"/empPFContributionInfo/",
+    "getLoanIssueSearchListWithPagination":"/getLoanIssueSearchListWithPagination",
+    "loanIssueId":"/loanIssueId/"
 }

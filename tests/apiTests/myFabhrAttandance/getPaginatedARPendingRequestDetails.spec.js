@@ -6,8 +6,7 @@ import applyARExpected from "../../fixtures/Response/applyARExpected.json" asser
 import loginExpected from "../../fixtures/Response/loginExpected.json" assert { type: "json" };
 
 test.describe("Get Paginated AR Pending Request Details API", () => {
-  let authToken;
-  let attendance;
+  let authToken, attendance;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token

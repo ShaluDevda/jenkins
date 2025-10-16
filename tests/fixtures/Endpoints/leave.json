@@ -1,4 +1,8 @@
 {
    "getActiveLeavePeriods": "/leaveBalanceNew",
-   "leaveWiseRatio": "/leaveWiseRatio"
+   "leaveWiseRatio": "/leaveWiseRatio",
+   "getPendingLeaveRequests": "/getPendingLeaveRequest",
+   "compensatoryOff":"/compensatoryOff",
+   "getPaginatedCompensatoryOffRequests":"/getPaginatedCompensatoryOffRequests",
+   "compOffData": "/compOffData"
 }

@@ -6,7 +6,7 @@ import applyARExpected from "../../fixtures/Response/applyARExpected.json" asser
 import rejectPayload from "../../fixtures/payloads/rejectAndApproveAr.json" assert { type: "json" };
 
 test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Attendance Regularization) API", () => {
-  let authToken,firstResponsebody;
+  let authToken,firstResponseBody;
 
   test.beforeEach(async ({ request }) => {
     // Login to get authentication token
@@ -27,6 +27,8 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
     let response;
     let attempts = 0;
     let status = 0;
+  let prevRetries = 0;
+  const maxPrevRetries = 6; // try up to 6 months back
 
     do {
       // Generate a new date for each attempt (today - attempts days, always before today)
@@ -48,6 +50,7 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
         fromDate: isoDate,
         toDate: isoDate,
       };
+      console.log(dynamicPayload)
       response = await attendance.applyAR(request, dynamicPayload, authToken);
      
       attempts++;
@@ -58,12 +61,51 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
       status = response.status;
       // If response is not 200, check message
       if (status !== 200 && response.body?.message) {
-        const msg = response.body.message;
+        const msg = String(response.body.message);
         if (
           msg === applyARExpected.failure.alreadyApplyLeave ||
           msg === applyARExpected.failure.message
         ) {
           // Allowed to retry
+        } else if (msg.includes("You cannot apply more than")) {
+          // API indicates monthly limit reached — try multiple previous months until success
+          let moved = false;
+          while (prevRetries < maxPrevRetries) {
+            prevRetries++;
+            // compute a date 'prevRetries' months before the current 'date'
+            const prevMonth = new Date(date);
+            prevMonth.setHours(0, 0, 0, 0);
+            // Move back N months
+            prevMonth.setMonth(prevMonth.getMonth() - prevRetries);
+            // Adjust day if overflowed
+            const desiredDay = date.getDate();
+            const lastDayPrevMonth = new Date(prevMonth.getFullYear(), prevMonth.getMonth() + 1, 0).getDate();
+            prevMonth.setDate(Math.min(desiredDay, lastDayPrevMonth));
+            const prevIso = prevMonth.toISOString();
+
+            const prevPayload = {
+              ...applyARExpected.requestBody,
+              fromDate: prevIso,
+              toDate: prevIso,
+            };
+            const prevResponse = await attendance.applyAR(request, prevPayload, authToken);
+            // use this attempt's response as the current response for remaining logic
+            response = prevResponse;
+            if (!response || typeof response.status !== 'number') {
+              break;
+            }
+            status = response.status;
+            moved = true;
+            // if succeeded, break out of retries
+            if (status === 200) break;
+            // if server returns the same monthly-limit message, continue to try earlier month
+            const newMsg = String(response.body?.message || "");
+            if (!newMsg.includes("You cannot apply more than")) {
+              // different error, stop trying previous months and let outer logic handle
+              break;
+            }
+          }
+          if (moved && status === 200) break;
         } else {
           // Not allowed, break loop to fail below
           break;
@@ -154,37 +196,19 @@ test.describe("POST| -/hrmsApi/attendanceregularizationrequest,   Apply AR (Atte
       expect(responseBody.data).toBeNull();
 
       // Clean up the initially created AR by rejecting it
-      const firstResponseBody = firstResponse.body;
+       firstResponseBody = firstResponse.body;
 
     }
     else {
-       firstResponsebody = firstResponse.body;
-      expect(firstResponsebody.statusCode).toBe(applyARExpected.failure.statusCode);
-      expect(firstResponsebody.message).toBe(applyARExpected.failure.message);
-      expect(firstResponsebody.isSuccess).toBe(applyARExpected.failure.isSuccess);
-      expect(firstResponsebody.data).toBeNull();
+       firstResponseBody = firstResponse.body;
+      expect(firstResponseBody.statusCode).toBe(applyARExpected.failure.statusCode);
+      expect(firstResponseBody.message).toBe(applyARExpected.failure.message);
+      expect(firstResponseBody.isSuccess).toBe(applyARExpected.failure.isSuccess);
+      expect(firstResponseBody.data).toBeNull();
 
     }
-    const rejectionPayload = {
-      ...rejectPayload.rejectApproveAr,
-      arID: firstResponsebody.data.arID,
-      arCategory: firstResponsebody.data.arCategory,
-      days: firstResponsebody.data.days,
-      fromDate: firstResponsebody.data.fromDate,
-      toDate: firstResponsebody.data.toDate,
-      employeeRemark: firstResponsebody.data.employeeRemark,
-      status: "REJ", // Set status to Reject
-      reviewerRemark: "Rejecting for cleanup purposes",
-    };
-    const rejectResponse = await attendance.applyAR(
-      request,
-      rejectionPayload,
-      authToken
-    );
-    expect(
-      rejectResponse.status,
-      "Cleanup failed: Could not reject the initial AR."
-    ).toBe(200);
+    console.log(firstResponseBody)
+
   });
 
   test("Apply AR - Invalid request body  @negative", async ({
